@@ -22,6 +22,14 @@ const enDict: Record<string, string> = {
   "profile.local": "Local profile. Cloud sync feature-flagged for future premium tier.",
   "nav.profile": "Profile",
   "nav.back": "Back",
+  "pattern.16:8": "16:8",
+  "pattern.16:8.note": "16h fast / 8h window",
+  "pattern.5:2": "5:2",
+  "pattern.5:2.note": "5 days normal / 2 light",
+  "pattern.OMAD": "OMAD",
+  "pattern.OMAD.note": "One meal a day",
+  "pattern.custom": "Custom",
+  "pattern.custom.note": "Your own rhythm",
   "footer.note": "Local tracking — cloud sync feature-flagged for future premium tier."
 };
 
