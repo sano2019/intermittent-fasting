@@ -134,8 +134,12 @@ function renderWeeklyStats(app: HTMLElement) {
   const entries = raw ? JSON.parse(raw) : [];
   const dots = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
     .map((d, i) => {
-      const entry = entries[i] || { completed: false };
-      const cls = entry.completed ? "indicator active" : (entry.completed === false ? "indicator missed" : "indicator");
+      const entry = entries[i];
+      let cls = "indicator"; // default: open/not-set (gray)
+      if (entry) {
+        if (entry.completed === true) cls = "indicator active";
+        else if (entry.completed === false) cls = "indicator missed";
+      }
       return `<span class="${cls}" title="${d}" style="margin-right:4px;"></span>`;
     }).join("");
   container.innerHTML = `
