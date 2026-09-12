@@ -97,7 +97,14 @@ export function renderApp(): HTMLElement {
   let animFrame: number;
   const updateTimer = () => {
     const display = document.getElementById("timer-display");
-    if (display) display.textContent = new Date().toISOString().split("T")[1].split(".")[0];
+    if (!display) return;
+    const baseStr = window.localStorage.getItem("timer-base");
+    const base = baseStr ? new Date(baseStr) : new Date();
+    const elapsedMs = Date.now() - base.getTime();
+    const h = Math.floor(elapsedMs / 3600000);
+    const m = Math.floor((elapsedMs % 3600000) / 60000);
+    const s = Math.floor((elapsedMs % 60000) / 1000);
+    display.textContent = [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
     animFrame = requestAnimationFrame(updateTimer);
   };
   animFrame = requestAnimationFrame(updateTimer);
