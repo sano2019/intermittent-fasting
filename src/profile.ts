@@ -1,5 +1,5 @@
 import type { Profile, FastingPattern } from "./types";
-import { t } from "./i18n";
+import { loadLang, t } from "./i18n";
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
   { key: "16:8", label: "16:8", note: "16h fast / 8h window" },
@@ -49,7 +49,7 @@ export function renderProfile(app: HTMLElement) {
         </div>
 
         <button type="submit" class="primary-btn" onclick="this.form.dispatchEvent(new Event('submit', {bubbles:true}))">${t("profile.save")}</button>
-        <span id="save-confirm" class="small" style="margin-left:8px;color:#7fbf7f;opacity:1;transition:opacity 0.3s;display:inline-block;">${t("profile.saved")}</span>
+        <span id="save-confirm" class="small" style="margin-left:8px;color:#7fbf7f;opacity:0;transition:opacity 0.3s;display:inline-block;">${t("profile.saved")}</span>
       </form>
     </section>
 
