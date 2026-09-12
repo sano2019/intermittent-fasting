@@ -22,6 +22,7 @@ export interface Profile {
   pattern: FastingPattern;
   startTime?: string;
   endTime?: string;
+  lang?: string;
   createdAt: string;
 }
 

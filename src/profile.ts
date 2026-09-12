@@ -66,6 +66,8 @@ export function renderProfile(app: HTMLElement) {
       input.value = p.name || "You";
       const selected = app.querySelector(`.pattern-btn[data-pattern="${p.pattern}"]`);
       if (selected) selected.classList.add("selected");
+      const langSelect = app.querySelector<HTMLSelectElement>("#lang-select");
+      if (langSelect && p.lang) langSelect.value = p.lang;
       const start = app.querySelector<HTMLInputElement>("#start-time")!;
       if (p.startTime) start.value = p.startTime;
       const end = app.querySelector<HTMLInputElement>("#end-time")!;
@@ -92,10 +94,18 @@ export function renderProfile(app: HTMLElement) {
       pattern: (selected?.getAttribute("data-pattern") as FastingPattern) ?? "custom",
       startTime: app.querySelector<HTMLInputElement>("#start-time")!.value,
       endTime: app.querySelector<HTMLInputElement>("#end-time")!.value,
+      lang: app.querySelector<HTMLSelectElement>("#lang-select")!.value,
       createdAt: new Date().toISOString(),
     };
     if (adapter) adapter.saveProfile(profile);
-    alert("Profile saved locally.");
+
+    // Hot reload language
+    import("./i18n").then((i18n) => {
+      i18n.loadLang(profile.lang as any).catch(() => {});
+      alert("Profile saved locally. Language switched to " + profile.lang);
+      // Re-render with new language (optional — kept simple by reload)
+      window.location.reload();
+    });
   });
 
   // Back link returns to main app view
