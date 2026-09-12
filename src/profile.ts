@@ -101,11 +101,10 @@ export function renderProfile(app: HTMLElement) {
     };
     if (adapter) adapter.saveProfile(profile);
 
-    import("./i18n").then((i18n) => {
-      i18n.loadLang(profile.lang as any).catch(() => {});
-      const confirm = app.querySelector("#save-confirm") as HTMLElement;
-      if (confirm) { confirm.style.opacity = "1"; setTimeout(() => confirm.style.opacity = "0", 2000); }
-    });
+    // Apply saved language synchronously and show splash confirmation
+    loadLang(profile.lang as any);
+    const confirm = app.querySelector("#save-confirm") as HTMLElement;
+    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => confirm.style.opacity = "0", 2000); }
   });
 
   // Back link returns to main app view
