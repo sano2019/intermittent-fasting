@@ -22,7 +22,10 @@ export function renderProfile(app: HTMLElement) {
       <form id="profile-form">
         <label class="field-label">Language</label>
       <select id="lang-select" class="text-input">
-        <option value="en" selected>English</option>
+        <option value="en">English</option>
+        <option value="sv">Svenska</option>
+        <option value="nl">Nederlands</option>
+        <option value="vi">Tiếng Việt</option>
       </select>
 
       <label class="field-label" for="user-name">Name</label>

@@ -1,4 +1,4 @@
-export type Lang = "en";
+export type Lang = "en" | "sv" | "nl" | "vi";
 
 let dict: Record<string, string> = {};
 

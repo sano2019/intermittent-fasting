@@ -1,0 +1,23 @@
+{
+  "app.title": "Vasten",
+  "app.subtitle": "Een rustige tracker voor jouw ritme.",
+  "today.label": "Voltooi het venster van vandaag",
+  "today.note": "Geen schuldgevoel. Gewoon aanwezigheid.",
+  "review.title": "Wekelijkse beoordeling",
+  "review.completed": "Voltooid: {count} / {total}",
+  "review.streak": "Reeks: {days} dagen",
+  "review.note": "Rustige beoordeling. Geen straffen.",
+  "patterns.title": "Patronen (uitbreidbaar)",
+  "profile.title": "Profiel",
+  "profile.subtitle": "Lokale instellingen — toekomstige cloud sync.",
+  "profile.name": "Naam",
+  "profile.pattern": "Vastenpatroon",
+  "profile.start": "Venster start",
+  "profile.end": "Venster einde",
+  "profile.save": "Opslaan",
+  "profile.account": "Account",
+  "profile.local": "Lokaal profiel. Cloud sync is een functie-vlag voor toekomstige premium.",
+  "nav.profile": "Profiel",
+  "nav.back": "Terug",
+  "footer.note": "Lokale tracking — cloud sync functie-vlag voor toekomstige premium."
+}

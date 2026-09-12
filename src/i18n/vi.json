@@ -1,0 +1,23 @@
+{
+  "app.title": "Nhịn ăn",
+  "app.subtitle": "Một trình theo dõi bình yên cho nhịp sống của bạn.",
+  "today.label": "Hoàn thành cửa sổ hôm nay",
+  "today.note": "Không tội lỗi. Chỉ hiện diện.",
+  "review.title": "Đánh giá hàng tuần",
+  "review.completed": "Hoàn thành: {count} / {total}",
+  "review.streak": "Chuỗi: {days} ngày",
+  "review.note": "Đánh giá bình yên. Không phạt.",
+  "patterns.title": "Mẫu (mở rộng)",
+  "profile.title": "Hồ sơ",
+  "profile.subtitle": "Cài đặt cục bộ — đồng bộ đám mây trong tương lai.",
+  "profile.name": "Tên",
+  "profile.pattern": "Mẫu nhịn ăn",
+  "profile.start": "Bắt đầu cửa sổ",
+  "profile.end": "Kết thúc cửa sổ",
+  "profile.save": "Lưu",
+  "profile.account": "Tài khoản",
+  "profile.local": "Hồ sơ cục bộ. Đồng bộ đám mây được gắn cờ cho cấp cao cấp trong tương lai.",
+  "nav.profile": "Hồ sơ",
+  "nav.back": "Quay lại",
+  "footer.note": "Theo dõi cục bộ — đồng bộ đám mây được gắn cờ cho cấp cao cấp trong tương lai."
+}

@@ -1,0 +1,23 @@
+{
+  "app.title": "Fasting",
+  "app.subtitle": "En lugn spårare för din rytm.",
+  "today.label": "Slutför dagens fönster",
+  "today.note": "Ingen skuld. Bara närvaro.",
+  "review.title": "Veckovis granskning",
+  "review.completed": "Slutfört: {count} / {total}",
+  "review.streak": "Sträck: {days} dagar",
+  "review.note": "Lugn granskning. Inga straff.",
+  "patterns.title": "Mönster (utbyggbart)",
+  "profile.title": "Profil",
+  "profile.subtitle": "Lokala inställningar — framtida molnsynk.",
+  "profile.name": "Namn",
+  "profile.pattern": "Fastemönster",
+  "profile.start": "Fönster start",
+  "profile.end": "Fönster slut",
+  "profile.save": "Spara",
+  "profile.account": "Konto",
+  "profile.local": "Lokal profil. Molnsynk funktionsflagad för framtida premium-nivå.",
+  "nav.profile": "Profil",
+  "nav.back": "Tillbaka",
+  "footer.note": "Lokal spårning — molnsynk funktionsflagad för framtida premium-nivå."
+}
