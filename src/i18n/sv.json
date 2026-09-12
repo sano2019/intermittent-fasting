@@ -20,5 +20,16 @@
   "profile.local": "Lokal profil. Molnsynk funktionsflagad för framtida premium-nivå.",
   "nav.profile": "Profil",
   "nav.back": "Tillbaka",
-  "footer.note": "Lokal spårning — molnsynk funktionsflagad för framtida premium-nivå."
+  "footer.note": "Lokal spårning — molnsynk funktionsflagad för framtida premium-nivå.",
+  "tracking.timer": "Fasttimer",
+  "tracking.start": "Fönster startat",
+  "tracking.end": "Fönster slutfört",
+  "pattern.16:8": "16:8",
+  "pattern.16:8.note": "16h fasta / 8h fönster",
+  "pattern.5:2": "5:2",
+  "pattern.5:2.note": "5 dagar normalt / 2 lätt",
+  "pattern.OMAD": "OMAD",
+  "pattern.OMAD.note": "Ett mål om dagen",
+  "pattern.custom": "Anpassad",
+  "pattern.custom.note": "Din egen rytm"
 }

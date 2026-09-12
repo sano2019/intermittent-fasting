@@ -20,5 +20,16 @@
   "profile.local": "Hồ sơ cục bộ. Đồng bộ đám mây được gắn cờ cho cấp cao cấp trong tương lai.",
   "nav.profile": "Hồ sơ",
   "nav.back": "Quay lại",
-  "footer.note": "Theo dõi cục bộ — đồng bộ đám mây được gắn cờ cho cấp cao cấp trong tương lai."
+  "footer.note": "Theo dõi cục bộ — đồng bộ đám mây được gắn cờ cho cấp cao cấp trong tương lai.",
+  "tracking.timer": "Đồng hồ nhịn ăn",
+  "tracking.start": "Cửa sổ đã bắt đầu",
+  "tracking.end": "Cửa sổ hoàn thành",
+  "pattern.16:8": "16:8",
+  "pattern.16:8.note": "Nhịn 16h / ăn 8h",
+  "pattern.5:2": "5:2",
+  "pattern.5:2.note": "5 ngày bình thường / 2 ngày nhẹ",
+  "pattern.OMAD": "OMAD",
+  "pattern.OMAD.note": "Một bữa mỗi ngày",
+  "pattern.custom": "Tùy chỉnh",
+  "pattern.custom.note": "Nhịp riêng của bạn"
 }

@@ -20,5 +20,16 @@
   "profile.local": "Lokaal profiel. Cloud sync is een functie-vlag voor toekomstige premium.",
   "nav.profile": "Profiel",
   "nav.back": "Terug",
-  "footer.note": "Lokale tracking — cloud sync functie-vlag voor toekomstige premium."
+  "footer.note": "Lokale tracking — cloud sync functie-vlag voor toekomstige premium.",
+  "tracking.timer": "Vasttimer",
+  "tracking.start": "Venster gestart",
+  "tracking.end": "Venster voltooid",
+  "pattern.16:8": "16:8",
+  "pattern.16:8.note": "16u vasten / 8u venster",
+  "pattern.5:2": "5:2",
+  "pattern.5:2.note": "5 dagen normaal / 2 licht",
+  "pattern.OMAD": "OMAD",
+  "pattern.OMAD.note": "Eén maaltijd per dag",
+  "pattern.custom": "Aangepast",
+  "pattern.custom.note": "Je eigen ritme"
 }
