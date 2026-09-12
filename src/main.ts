@@ -100,6 +100,16 @@ export function renderApp(): HTMLElement {
     const display = document.getElementById("timer-display");
     if (!display) return;
     const baseStr = window.localStorage.getItem("timer-base");
+    // Backfill test data (Mon-Thu completed, Fri missed, Sat today open)
+    const testEntries = [
+      { date: "2026-09-07", completed: true }, // Mon
+      { date: "2026-09-08", completed: true }, // Tue
+      { date: "2026-09-09", completed: true }, // Wed
+      { date: "2026-09-10", completed: true }, // Thu
+      { date: "2026-09-11", completed: false }, // Fri — broke fast
+      { date: "2026-09-12", completed: false }, // Sat — today, open
+    ];
+    window.localStorage.setItem("test-entries", JSON.stringify(testEntries));
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
     const h = Math.floor(elapsedMs / 3600000);
@@ -120,8 +130,16 @@ export function renderApp(): HTMLElement {
 
 function renderWeeklyStats(app: HTMLElement) {
   const container = app.querySelector("#weekly-stats")!;
-  // Placeholder stats — architecture ready for real data
+  const raw = window.localStorage.getItem("test-entries");
+  const entries = raw ? JSON.parse(raw) : [];
+  const dots = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    .map((d, i) => {
+      const entry = entries[i] || { completed: false };
+      const cls = entry.completed ? "indicator active" : "indicator";
+      return `<span class="${cls}" title="${d}" style="margin-right:4px;"></span>`;
+    }).join("");
   container.innerHTML = `
+    <div class="weekly-dots">${dots}</div>
     <p>${t("review.completed", { count: 3, total: 7 })}</p>
     <p>${t("review.streak", { days: 2 })}</p>
     <p class="small">${t("review.note")}</p>
