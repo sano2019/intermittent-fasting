@@ -16,9 +16,20 @@ export interface WeeklyReview {
   notes?: string;
 }
 
+export interface Profile {
+  id: string;
+  name: string;
+  pattern: FastingPattern;
+  startTime?: string;
+  endTime?: string;
+  createdAt: string;
+}
+
 export interface StorageAdapter {
   save(entry: FastingEntry): Promise<void>;
   load(date: string): Promise<FastingEntry | null>;
   loadRange(start: string, end: string): Promise<FastingEntry[]>;
   loadAll(): Promise<FastingEntry[]>;
+  saveProfile(profile: Profile): Promise<void>;
+  loadProfile(): Promise<Profile | null>;
 }

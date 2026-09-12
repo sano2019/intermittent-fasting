@@ -1,4 +1,4 @@
-import type { StorageAdapter, FastingEntry } from "./types";
+import type { StorageAdapter, FastingEntry, Profile } from "./types";
 
 const STORAGE_KEY = "if_local_entries";
 
@@ -31,5 +31,20 @@ export class LocalStorageAdapter implements StorageAdapter {
 
   async loadAll(): Promise<FastingEntry[]> {
     return this.getEntries();
+  }
+
+  private async getProfile(): Promise<Profile | null> {
+    const raw = localStorage.getItem("if_local_profile");
+    return raw ? JSON.parse(raw) : null;
+  }
+  private async setProfile(profile: Profile): Promise<void> {
+    localStorage.setItem("if_local_profile", JSON.stringify(profile));
+  }
+
+  async saveProfile(profile: Profile): Promise<void> {
+    await this.setProfile(profile);
+  }
+  async loadProfile(): Promise<Profile | null> {
+    return this.getProfile();
   }
 }
