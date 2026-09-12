@@ -12,7 +12,7 @@ export function renderProfile(app: HTMLElement) {
     <header>
       <div class="header-row">
         <h1>Profile</h1>
-        <a href="#/" class="header-link">Back</a>
+        <a href="#/" class="header-link" id="back-link">Back</a>
       </div>
       <p>Local settings — future cloud sync.</p>
     </header>
@@ -89,4 +89,14 @@ export function renderProfile(app: HTMLElement) {
     if (adapter) adapter.saveProfile(profile);
     alert("Profile saved locally.");
   });
+
+  // Back link returns to main app view
+  const backLink = app.querySelector("#back-link");
+  if (backLink) {
+    backLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.hash = "/";
+      window.location.reload();
+    });
+  }
 }
