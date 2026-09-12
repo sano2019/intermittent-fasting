@@ -5,5 +5,5 @@ export default defineConfig({
   root: ".",
   build: { outDir: "dist" },
   plugins: [basicSsl()],
-  server: { port: 5173, open: true, https: true },
+  server: { port: 5173, open: false, https: true },
 });

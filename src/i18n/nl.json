@@ -31,5 +31,6 @@
   "pattern.OMAD": "OMAD",
   "pattern.OMAD.note": "Eén maaltijd per dag",
   "pattern.custom": "Aangepast",
-  "pattern.custom.note": "Je eigen ritme"
+  "pattern.custom.note": "Je eigen ritme",
+  "timer.override": "Begin vanaf nu"
 }

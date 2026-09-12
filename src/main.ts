@@ -43,10 +43,10 @@ export function renderApp(): HTMLElement {
     </section>
 
     <section class="card" id="timer-card">
-      <h2>Fasting timer</h2>
+      <h2>${t("tracking.timer")}</h2>
       <p id="timer-display" class="small">00:00:00</p>
       <span id="fast-indicator" class="indicator"></span>
-      <button id="timer-override">Start from now</button>
+      <button id="timer-override">${t("timer.override")}</button>
     </section>
 
     <section class="card">
