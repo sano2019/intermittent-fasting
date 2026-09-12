@@ -103,8 +103,8 @@ export function renderProfile(app: HTMLElement) {
 
     loadLang(profile.lang as any);                           // change language immediately
     const confirm = app.querySelector("#save-confirm") as HTMLElement;
-    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => { confirm.style.opacity = "0"; }, 800); }
-    renderProfile(app);                                           // re-render with new language immediately
+    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => { confirm.style.opacity = "0"; renderProfile(app); }, 1000); }
+    else { renderProfile(app); }
   });
 
   // Back link returns to main app view
