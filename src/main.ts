@@ -42,6 +42,11 @@ export function renderApp(): HTMLElement {
       <p class="small">${t("today.note")}</p>
     </section>
 
+    <section class="card" id="timer-card">
+      <h2>Fasting timer</h2>
+      <p id="timer-display" class="small">00:00:00</p>
+    </section>
+
     <section class="card">
       <h2>${t("review.title")}</h2>
       <div id="weekly-stats"></div>
@@ -86,6 +91,13 @@ export function renderApp(): HTMLElement {
   });
 
   renderWeeklyStats(app);
+
+  // Live timer updates every second
+  setInterval(() => {
+    const display = document.getElementById("timer-display");
+    if (display) display.textContent = new Date().toISOString().split("T")[1].split(".")[0];
+  }, 1000);
+
   return app;
 }
 
