@@ -1,47 +1,21 @@
 export type Lang = "en" | "sv" | "nl" | "vi";
 
-const enDict: Record<string, string> = {
-  "app.title": "Fasting",
-  "app.subtitle": "A calm tracker for your rhythm.",
-  "today.label": "Complete today's window",
-  "today.note": "No guilt. Just presence.",
-  "review.title": "Weekly Review",
-  "review.completed": "Completed: {count} / {total}",
-  "review.streak": "Streak: {days} days",
-  "review.note": "Calm review. No penalties.",
-  "patterns.title": "Patterns (extensible)",
-  "profile.title": "Profile",
-  "profile.subtitle": "Local settings — future cloud sync.",
-  "profile.language": "Language",
-  "profile.name": "Name",
-  "profile.pattern": "Fasting Pattern",
-  "profile.start": "Window start",
-  "profile.end": "Window end",
-  "profile.save": "Save",
-  "profile.account": "Account",
-  "profile.local": "Local profile. Cloud sync feature-flagged for future premium tier.",
-  "nav.profile": "Profile",
-  "nav.back": "Back",
-  "pattern.16:8": "16:8",
-  "pattern.16:8.note": "16h fast / 8h window",
-  "pattern.5:2": "5:2",
-  "pattern.5:2.note": "5 days normal / 2 light",
-  "pattern.OMAD": "OMAD",
-  "pattern.OMAD.note": "One meal a day",
-  "pattern.custom": "Custom",
-  "pattern.custom.note": "Your own rhythm",
-  "footer.note": "Local tracking — cloud sync feature-flagged for future premium tier."
+import enDict from "./en.json";
+import svDict from "./sv.json";
+import nlDict from "./nl.json";
+import viDict from "./vi.json";
+
+const dictionaries: Record<Lang, Record<string, string>> = {
+  en: enDict,
+  sv: svDict,
+  nl: nlDict,
+  vi: viDict,
 };
 
-let dict = { ...enDict };
+let dict: Record<string, string> = dictionaries.en;
 
-export async function loadLang(lang: "en" | "sv" | "nl" | "vi" = "en") {
-  if (lang === "en") {
-    dict = { ...enDict };
-    return;
-  }
-  const res = await fetch(`/src/i18n/${lang}.json`);
-  dict = await res.json();
+export function loadLang(lang: Lang = "en") {
+  dict = dictionaries[lang] ?? dictionaries.en;
 }
 
 export function t(key: string, vars?: Record<string, string | number>): string {
