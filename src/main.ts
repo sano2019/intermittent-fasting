@@ -2,9 +2,14 @@ import { FastingPattern } from "./types";
 import { loadLang, t } from "./i18n";
 import { LocalStorageAdapter } from "./storage/local";
 
+(window as any).adapter = new LocalStorageAdapter();
+
 loadLang("en").catch(() => {});
 
-(window as any).adapter = new LocalStorageAdapter();
+// Load user language preference if available
+(window as any).adapter?.loadProfile().then((p: any) => {
+  if (p?.lang) loadLang(p.lang as any).catch(() => {});
+});
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
   { key: "16:8", label: "16:8", note: "16h fast / 8h window" },
@@ -20,28 +25,28 @@ export function renderApp(): HTMLElement {
   app.innerHTML = `
     <header>
       <div class="header-row">
-        <h1>Fasting</h1>
-        <a href="#/profile" class="header-link">Profile</a>
+        <h1>${t("app.title")}</h1>
+        <a href="#/profile" class="header-link">${t("nav.profile")}</a>
       </div>
-      <p>A calm tracker for your rhythm.</p>
+      <p>${t("app.subtitle")}</p>
     </header>
 
     <section class="card">
-      <h2>Today</h2>
+      <h2>${t("today.label")}</h2>
       <div id="today-row" class="checkbox-row">
-        <label for="today-check">Complete today's window</label>
+        <label for="today-check">${t("today.label")}</label>
         <input id="today-check" type="checkbox" />
       </div>
-      <p class="small">No guilt. Just presence.</p>
+      <p class="small">${t("today.note")}</p>
     </section>
 
     <section class="card">
-      <h2>Weekly Review</h2>
+      <h2>${t("review.title")}</h2>
       <div id="weekly-stats"></div>
     </section>
 
     <section class="card">
-      <h2>Patterns (extensible)</h2>
+      <h2>${t("patterns.title")}</h2>
       ${patterns
         .map(
           (p) => `
@@ -55,7 +60,7 @@ export function renderApp(): HTMLElement {
     </section>
 
     <footer>
-      Local tracking &mdash; cloud sync feature-flagged for future premium tier.
+      ${t("footer.note")}
     </footer>
   `;
 
@@ -86,9 +91,9 @@ function renderWeeklyStats(app: HTMLElement) {
   const container = app.querySelector("#weekly-stats")!;
   // Placeholder stats — architecture ready for real data
   container.innerHTML = `
-    <p>Completed: <strong>3 / 7</strong></p>
-    <p>Streak: <strong>2 days</strong></p>
-    <p class="small">Calm review. No penalties.</p>
+    <p>${t("review.completed", { count: 3, total: 7 })}</p>
+    <p>${t("review.streak", { days: 2 })}</p>
+    <p class="small">${t("review.note")}</p>
   `;
 }
 

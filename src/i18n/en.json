@@ -10,6 +10,7 @@
   "patterns.title": "Patterns (extensible)",
   "profile.title": "Profile",
   "profile.subtitle": "Local settings — future cloud sync.",
+  "profile.language": "Language",
   "profile.name": "Name",
   "profile.pattern": "Fasting Pattern",
   "profile.start": "Window start",

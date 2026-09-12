@@ -1,4 +1,5 @@
 import type { Profile, FastingPattern } from "./types";
+import { t } from "./i18n";
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
   { key: "16:8", label: "16:8", note: "16h fast / 8h window" },
@@ -11,16 +12,16 @@ export function renderProfile(app: HTMLElement) {
   app.innerHTML = `
     <header>
       <div class="header-row">
-        <h1>Profile</h1>
-        <a href="#/" class="header-link" id="back-link">Back</a>
+        <h1>${t("profile.title")}</h1>
+        <a href="#/" class="header-link" id="back-link">${t("nav.back")}</a>
       </div>
-      <p>Local settings — future cloud sync.</p>
+      <p>${t("profile.subtitle")}</p>
     </header>
 
     <section class="card">
-      <h2>Settings</h2>
+      <h2>${t("profile.title")}</h2>
       <form id="profile-form">
-        <label class="field-label">Language</label>
+        <label class="field-label">${t("profile.language")}</label>
       <select id="lang-select" class="text-input">
         <option value="en">English</option>
         <option value="sv">Svenska</option>
@@ -28,32 +29,32 @@ export function renderProfile(app: HTMLElement) {
         <option value="vi">Tiếng Việt</option>
       </select>
 
-      <label class="field-label" for="user-name">Name</label>
+      <label class="field-label" for="user-name">${t("profile.name")}</label>
         <input id="user-name" type="text" value="You" class="text-input" />
 
-        <label class="field-label">Fasting Pattern</label>
+        <label class="field-label">${t("profile.pattern")}</label>
         <div class="pattern-grid">
           ${patterns.map((p) => `<button type="button" class="pattern-btn" data-pattern="${p.key}" aria-label="${p.label}">${p.label}<span class="small note-inline">${p.note}</span></button>`).join("")}
         </div>
 
         <div class="time-row">
           <div>
-            <label class="field-label" for="start-time">Window start</label>
+            <label class="field-label" for="start-time">${t("profile.start")}</label>
             <input id="start-time" type="time" value="08:00" class="text-input" />
           </div>
           <div>
-            <label class="field-label" for="end-time">Window end</label>
+            <label class="field-label" for="end-time">${t("profile.end")}</label>
             <input id="end-time" type="time" value="16:00" class="text-input" />
           </div>
         </div>
 
-        <button type="submit" class="primary-btn">Save</button>
+        <button type="submit" class="primary-btn">${t("profile.save")}</button>
       </form>
     </section>
 
     <section class="card">
-      <h2>Account</h2>
-      <p class="small">Local profile. Cloud sync feature-flagged for future premium tier.</p>
+      <h2>${t("profile.account")}</h2>
+      <p class="small">${t("profile.local")}</p>
     </section>
   `;
 
