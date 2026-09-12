@@ -48,8 +48,8 @@ export function renderProfile(app: HTMLElement) {
           </div>
         </div>
 
-        <button type="submit" class="primary-btn">${t("profile.save")}</button>
-        <span id="save-confirm" class="small" style="margin-left:8px;color:#7fbf7f;opacity:0;transition:opacity 0.3s;">${t("profile.saved")}</span>
+        <button type="submit" class="primary-btn" onclick="this.form.dispatchEvent(new Event('submit', {bubbles:true}))">${t("profile.save")}</button>
+        <span id="save-confirm" class="small" style="margin-left:8px;color:#7fbf7f;opacity:1;transition:opacity 0.3s;display:inline-block;">${t("profile.saved")}</span>
       </form>
     </section>
 
@@ -104,7 +104,7 @@ export function renderProfile(app: HTMLElement) {
     // Apply saved language synchronously, show splash, then reload profile with new lang
     loadLang(profile.lang as any);
     const confirm = app.querySelector("#save-confirm") as HTMLElement;
-    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => { confirm.style.opacity = "0"; renderProfile(app); }, 500); }
+    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => { confirm.style.opacity = "0"; renderProfile(app); }, 2500); }
   });
 
   // Back link returns to main app view
