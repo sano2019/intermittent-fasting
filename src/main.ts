@@ -107,7 +107,7 @@ export function renderApp(): HTMLElement {
       { date: "2026-09-09", completed: true }, // Wed
       { date: "2026-09-10", completed: true }, // Thu
       { date: "2026-09-11", completed: false }, // Fri — broke fast
-      { date: "2026-09-12", completed: false }, // Sat — today, open
+      { date: "2026-09-12", completed: null }, // Sat — today, open (not missed)
     ];
     window.localStorage.setItem("test-entries", JSON.stringify(testEntries));
     const base = baseStr ? new Date(baseStr) : new Date();
@@ -138,7 +138,7 @@ function renderWeeklyStats(app: HTMLElement) {
       let cls = "indicator"; // default: open/not-set (gray)
       if (entry) {
         if (entry.completed === true) cls = "indicator active";
-        else if (entry.completed === false) cls = "indicator missed";
+        else if (entry.completed === false && entry.completed !== null) cls = "indicator missed";
       }
       return `<span class="${cls}" title="${d}" style="margin-right:4px;"></span>`;
     }).join("");
