@@ -135,7 +135,7 @@ function renderWeeklyStats(app: HTMLElement) {
   const dots = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
     .map((d, i) => {
       const entry = entries[i] || { completed: false };
-      const cls = entry.completed ? "indicator active" : "indicator";
+      const cls = entry.completed ? "indicator active" : (entry.completed === false ? "indicator missed" : "indicator");
       return `<span class="${cls}" title="${d}" style="margin-right:4px;"></span>`;
     }).join("");
   container.innerHTML = `
