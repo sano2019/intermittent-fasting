@@ -45,6 +45,7 @@ export function renderApp(): HTMLElement {
     <section class="card" id="timer-card">
       <h2>Fasting timer</h2>
       <p id="timer-display" class="small">00:00:00</p>
+      <button id="timer-override">Start from now</button>
     </section>
 
     <section class="card">
