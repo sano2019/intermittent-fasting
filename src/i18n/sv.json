@@ -32,5 +32,6 @@
   "pattern.OMAD.note": "Ett mål om dagen",
   "pattern.custom": "Anpassad",
   "pattern.custom.note": "Din egen rytm",
-  "timer.override": "Börja från nu"
+  "timer.override": "Börja från nu",
+  "profile.saved": "Sparad"
 }

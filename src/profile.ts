@@ -49,6 +49,7 @@ export function renderProfile(app: HTMLElement) {
         </div>
 
         <button type="submit" class="primary-btn">${t("profile.save")}</button>
+        <span id="save-confirm" class="small" style="margin-left:8px;color:#7fbf7f;opacity:0;transition:opacity 0.3s;">${t("profile.saved")}</span>
       </form>
     </section>
 
@@ -100,12 +101,10 @@ export function renderProfile(app: HTMLElement) {
     };
     if (adapter) adapter.saveProfile(profile);
 
-    // Hot reload language
     import("./i18n").then((i18n) => {
       i18n.loadLang(profile.lang as any).catch(() => {});
-      alert("Profile saved locally. Language switched to " + profile.lang);
-      // Re-render with new language (optional — kept simple by reload)
-      window.location.reload();
+      const confirm = app.querySelector("#save-confirm") as HTMLElement;
+      if (confirm) { confirm.style.opacity = "1"; setTimeout(() => confirm.style.opacity = "0", 2000); }
     });
   });
 

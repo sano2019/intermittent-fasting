@@ -32,5 +32,6 @@
   "pattern.OMAD.note": "Một bữa mỗi ngày",
   "pattern.custom": "Tùy chỉnh",
   "pattern.custom.note": "Nhịp riêng của bạn",
-  "timer.override": "Bắt đầu từ bây giờ"
+  "timer.override": "Bắt đầu từ bây giờ",
+  "profile.saved": "Đã lưu"
 }

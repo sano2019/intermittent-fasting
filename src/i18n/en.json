@@ -16,6 +16,7 @@
   "profile.start": "Window start",
   "profile.end": "Window end",
   "profile.save": "Save",
+  "profile.saved": "Saved",
   "profile.account": "Account",
   "profile.local": "Local profile. Cloud sync feature-flagged for future premium tier.",
   "nav.profile": "Profile",
