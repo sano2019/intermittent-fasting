@@ -1,4 +1,7 @@
 import { FastingPattern } from "./types";
+import { LocalStorageAdapter } from "./storage/local";
+
+(window as any).adapter = new LocalStorageAdapter();
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
   { key: "16:8", label: "16:8", note: "16h fast / 8h window" },
@@ -13,7 +16,10 @@ export function renderApp(): HTMLElement {
 
   app.innerHTML = `
     <header>
-      <h1>Fasting</h1>
+      <div class="header-row">
+        <h1>Fasting</h1>
+        <a href="#/profile" class="header-link">Profile</a>
+      </div>
       <p>A calm tracker for your rhythm.</p>
     </header>
 
@@ -49,6 +55,15 @@ export function renderApp(): HTMLElement {
       Local tracking &mdash; cloud sync feature-flagged for future premium tier.
     </footer>
   `;
+
+  // Profile link navigation
+  const profileLink = app.querySelector('a[href="#/profile"]');
+  if (profileLink) {
+    profileLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      import("./profile").then((m) => m.renderProfile(app));
+    });
+  }
 
   // Simple interaction hook — keeps function separate from style
   const todayCheck = app.querySelector<HTMLInputElement>("#today-check")!;

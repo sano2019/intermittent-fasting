@@ -90,6 +90,101 @@ header p {
   background: #f3f1ed;
 }
 
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-link {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px 12px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.header-link:hover {
+  color: var(--fg);
+  border-color: var(--accent);
+}
+
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 0.95rem;
+}
+
+.pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.pattern-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 8px;
+  text-align: center;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pattern-btn.selected {
+  border-color: var(--accent);
+  background: #f0eee8;
+}
+
+.pattern-btn .note-inline {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.7rem;
+}
+
+.time-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.time-row > div {
+  flex: 1;
+}
+
+.primary-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: var(--muted);
+}
+
 footer {
   margin-top: 48px;
   text-align: center;
