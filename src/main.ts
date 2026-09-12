@@ -1,5 +1,8 @@
 import { FastingPattern } from "./types";
+import { loadLang, t } from "./i18n";
 import { LocalStorageAdapter } from "./storage/local";
+
+loadLang("en").catch(() => {});
 
 (window as any).adapter = new LocalStorageAdapter();
 

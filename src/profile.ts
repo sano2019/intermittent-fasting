@@ -20,7 +20,12 @@ export function renderProfile(app: HTMLElement) {
     <section class="card">
       <h2>Settings</h2>
       <form id="profile-form">
-        <label class="field-label" for="user-name">Name</label>
+        <label class="field-label">Language</label>
+      <select id="lang-select" class="text-input">
+        <option value="en" selected>English</option>
+      </select>
+
+      <label class="field-label" for="user-name">Name</label>
         <input id="user-name" type="text" value="You" class="text-input" />
 
         <label class="field-label">Fasting Pattern</label>
