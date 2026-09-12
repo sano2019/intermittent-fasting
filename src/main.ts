@@ -51,8 +51,8 @@ export function renderApp(): HTMLElement {
         .map(
           (p) => `
         <div class="checkbox-row">
-          <label>${p.label}</label>
-          <span class="small note-inline">${p.note}</span>
+          <label>${t(`pattern.${p.key}`)}</label>
+          <span class="small note-inline">${t(`pattern.${p.key}.note`)}</span>
         </div>
       `
         )
