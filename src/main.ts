@@ -92,11 +92,14 @@ export function renderApp(): HTMLElement {
 
   renderWeeklyStats(app);
 
-  // Live timer updates every second
-  setInterval(() => {
+  // Frame-based timer for accuracy (requestAnimationFrame)
+  let animFrame: number;
+  const updateTimer = () => {
     const display = document.getElementById("timer-display");
     if (display) display.textContent = new Date().toISOString().split("T")[1].split(".")[0];
-  }, 1000);
+    animFrame = requestAnimationFrame(updateTimer);
+  };
+  animFrame = requestAnimationFrame(updateTimer);
 
   return app;
 }
