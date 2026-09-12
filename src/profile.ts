@@ -101,10 +101,10 @@ export function renderProfile(app: HTMLElement) {
     };
     if (adapter) adapter.saveProfile(profile);
 
-    loadLang(profile.lang as any);                           // change language immediately
-    const confirm = app.querySelector("#save-confirm") as HTMLElement;
-    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => { confirm.style.opacity = "0"; renderProfile(app); }, 1000); }
-    else { renderProfile(app); }
+    loadLang(profile.lang as any);
+    renderProfile(app); // language loads immediately (before splash)
+    const confirm = document.querySelector("#splash-confirm") || app.querySelector("#save-confirm") as HTMLElement;
+    if (confirm) { confirm.style.opacity = "1"; setTimeout(() => confirm.style.opacity = "0", 2000); }
   });
 
   // Back link returns to main app view
