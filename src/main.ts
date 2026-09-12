@@ -102,6 +102,11 @@ export function renderApp(): HTMLElement {
   };
   animFrame = requestAnimationFrame(updateTimer);
 
+  // Override: reset timer base to now (handles oversleeping)
+  document.getElementById("timer-override")?.addEventListener("click", () => {
+    window.localStorage.setItem("timer-base", new Date().toISOString());
+  });
+
   return app;
 }
 
