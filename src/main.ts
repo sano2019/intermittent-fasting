@@ -54,19 +54,7 @@ export function renderApp(): HTMLElement {
       <div id="weekly-stats"></div>
     </section>
 
-    <section class="card">
-      <h2>${t("patterns.title")}</h2>
-      ${patterns
-        .map(
-          (p) => `
-        <div class="checkbox-row">
-          <label>${t(`pattern.${p.key}`)}</label>
-          <span class="small note-inline">${t(`pattern.${p.key}.note`)}</span>
-        </div>
-      `
-        )
-        .join("")}
-    </section>
+
 
     <footer>
       ${t("footer.note")}
