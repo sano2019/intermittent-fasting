@@ -98,12 +98,27 @@ export function renderApp(): HTMLElement {
       { date: "2026-09-12", completed: null }, // Sat — today, open (not missed)
     ];
     window.localStorage.setItem("test-entries", JSON.stringify(testEntries));
+    // Read saved pattern from adapter storage (synced by profile save)
+    const profileRaw = window.localStorage.getItem("profile");
+    const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
+    const savedPattern = (savedProfile?.pattern as string) || "custom";
+    // For 16:8: fast window = 16h, feed window = 8h; generic for others (to expand)
+    const FAST_WINDOW_H = savedPattern === "16:8" ? 16 : 0; // 0 = no split (generic)
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
-    const h = Math.floor(elapsedMs / 3600000);
-    const m = Math.floor((elapsedMs % 3600000) / 60000);
-    const s = Math.floor((elapsedMs % 60000) / 1000);
-    display.textContent = [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+    if (FAST_WINDOW_H > 0 && elapsedMs > FAST_WINDOW_H * 3600000) {
+      // In feed window: show time since fast window ended
+      const feedMs = elapsedMs - FAST_WINDOW_H * 3600000;
+      const h = Math.floor(feedMs / 3600000);
+      const m = Math.floor((feedMs % 3600000) / 60000);
+      const s = Math.floor((feedMs % 60000) / 1000);
+      display.textContent = `Feed: ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+    } else {
+      const h = Math.floor(elapsedMs / 3600000);
+      const m = Math.floor((elapsedMs % 3600000) / 60000);
+      const s = Math.floor((elapsedMs % 60000) / 1000);
+      display.textContent = FAST_WINDOW_H > 0 ? `Fast: ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}` : [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+    }
     animFrame = requestAnimationFrame(updateTimer);
   };
   animFrame = requestAnimationFrame(updateTimer);
