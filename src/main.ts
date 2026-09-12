@@ -4,11 +4,13 @@ import { LocalStorageAdapter } from "./storage/local";
 
 (window as any).adapter = new LocalStorageAdapter();
 
-loadLang("en").catch(() => {});
-
-// Load user language preference if available
+// Load user language preference synchronously from profile
 (window as any).adapter?.loadProfile().then((p: any) => {
-  if (p?.lang) loadLang(p.lang as any).catch(() => {});
+  loadLang(p?.lang || "en");
+  renderApp();  // re-render after language loaded
+}).catch(() => {
+  loadLang("en");
+  renderApp();
 });
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
