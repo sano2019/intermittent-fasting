@@ -133,21 +133,10 @@ export function renderApp(): HTMLElement {
     const FAST_WINDOW_H = savedHours;
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
-    if (FAST_WINDOW_H > 0 && elapsedMs > FAST_WINDOW_H * 3600000) {
-      // In feed window: show time since fast window ended
-      const feedMs = elapsedMs - FAST_WINDOW_H * 3600000;
-      const h = Math.floor(feedMs / 3600000);
-      const m = Math.floor((feedMs % 3600000) / 60000);
-      const s = Math.floor((feedMs % 60000) / 1000);
-      timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
-      const lblFeed = document.getElementById("timer-label-text");
-      if (lblFeed) lblFeed.textContent = "Feed";
-    } else {
-      // Mode: remaining time = max(0, FAST_WINDOW_H * 3600000 - elapsedMs)
-      const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
-      if (showRemaining) {
-        const h = Math.floor(remainingMs / 3600000);
-        const m = Math.floor((remainingMs % 3600000) / 60000);
+    const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
+    if (showRemaining) {
+      const h = Math.floor(remainingMs / 3600000);
+      const m = Math.floor((remainingMs % 3600000) / 60000);
         const s = Math.floor((remainingMs % 60000) / 1000);
         timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
       } else {
@@ -157,7 +146,6 @@ export function renderApp(): HTMLElement {
       timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
       const lblFast = document.getElementById("timer-label-text");
       if (lblFast) lblFast.textContent = showRemaining ? "Remaining" : "Elapsed";
-      }
     }
     // Progress ring: fill based on elapsed / 24h (full circle = 24h)
     const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
