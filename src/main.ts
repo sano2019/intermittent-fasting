@@ -239,8 +239,7 @@ function renderWeeklyStats(app: HTMLElement) {
     }).join("");
   container.innerHTML = `
     <div class="weekly-dots">${dots}</div>
-    <div class="weekly-labels" >      <span>${t("days.mon")}</span><span>${t("days.tue")}</span><span>${t("days.wed")}</span><span>${t("days.thu")}</span><span>${t("days.fri")}</span><span>${t("days.sat")}</span><span>${t("days.sun")}</span></div>
-    <div class="weekly-labels" style="display:flex;justify-content:center;gap:8px;font-size:0.7em;color:var(--muted);margin-top:4px;"></div>
+    <div class="weekly-labels"><span>${t("days.mon")}</span><span>${t("days.tue")}</span><span>${t("days.wed")}</span><span>${t("days.thu")}</span><span>${t("days.fri")}</span><span>${t("days.sat")}</span><span>${t("days.sun")}</span></div>
     <p>${t("review.completed", { count: 3, total: 7 })}</p>
     <p>${t("review.streak", { days: 2 })}</p>
     <p class="small">${t("review.note")}</p>

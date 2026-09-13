@@ -222,7 +222,7 @@ footer {
 .weekly-labels {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 36px;
   font-size: 0.55rem;
   letter-spacing: 0.6px;
   color: #b8b6ad;
@@ -238,3 +238,6 @@ footer {
   line-height: 1;
   letter-spacing: 0.12em;
 }
+
+.weekly-dots { display:flex; justify-content:center; gap:36px; margin-top:8px; }
+.weekly-dots span { display:inline-block; width:18px; height:18px; border-radius:50%; }
