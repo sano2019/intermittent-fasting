@@ -231,14 +231,13 @@ function renderWeeklyStats(app: HTMLElement) {
       ${[0,1,2,3,4,5,6].map(i => {
         const d = days[i];
         const entry = entryByDay[i];
-        let dotCls = "dot indicator";
+        let cls = "indicator";
         if (entry) {
-          if (entry.completed === true) dotCls = "dot active";
-          else if (entry.completed === false && entry.completed !== null) dotCls = "dot missed";
-          else dotCls = "dot indicator";
+          if (entry.completed === true) cls = "active";
+          else if (entry.completed === false && entry.completed !== null) cls = "missed";
         }
         const labelText = d.length > 3 ? d.substring(0, 3) : d;
-        return `<div class="week-day"><span class="dot ${stateCls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
+        return `<div class="week-day"><span class="dot ${cls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
       }).join("")}
     </div>
     <p class="review-stat">${t("review.completed", { count: 3, total: 7 })}</p>
