@@ -211,6 +211,19 @@ export function renderApp(): HTMLElement {
     animFrame = requestAnimationFrame(updateTimer);
   });
 
+  document.getElementById("timer-plus")?.addEventListener("click", () => {
+    const stored = parseInt(window.localStorage.getItem("fast-hours") || "16", 10);
+    const next = Math.min(24, stored + 1);
+    window.localStorage.setItem("fast-hours", String(next));
+    document.querySelector(".timer-window")!.textContent = `${next} hr`;
+  });
+  document.getElementById("timer-minus")?.addEventListener("click", () => {
+    const stored = parseInt(window.localStorage.getItem("fast-hours") || "16", 10);
+    const next = Math.max(4, stored - 1);
+    window.localStorage.setItem("fast-hours", String(next));
+    document.querySelector(".timer-window")!.textContent = `${next} hr`;
+  });
+
   document.getElementById("timer-override")?.addEventListener("click", () => {
     window.localStorage.setItem("timer-base", new Date().toISOString());
   });
