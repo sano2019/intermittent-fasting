@@ -187,6 +187,10 @@ export function renderApp(): HTMLElement {
     location.reload();
   });
 
+  document.getElementById("timer-start")?.addEventListener("click", () => {
+    window.localStorage.setItem("timer-base", new Date().toISOString());
+  });
+
   // Toggle elapsed / remaining mode (switch icon)
   let showRemaining = false;
   document.getElementById("timer-mode-toggle")?.addEventListener("click", () => {
