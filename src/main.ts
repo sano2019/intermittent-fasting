@@ -42,11 +42,22 @@ export function renderApp(): HTMLElement {
       <p class="small">${t("today.note")}</p>
     </section>
 
-    <section class="card" id="timer-card">
-      <h2>${t("tracking.fast")}</h2>
-      <p id="timer-display" class="timer-value"><span id="timer-label" class="timer-label">Fast</span><span id="timer-time" class="timer-time">00:00:00</span></p>
-      <span id="fast-indicator" class="indicator"></span>
-      <button id="timer-override">${t("timer.override")}</button>
+    <section class="card timer-ring-card" id="timer-card">
+      <h2 class="timer-card-title">${t("tracking.fast")}</h2>
+      <div class="ring-wrap">
+        <svg viewBox="0 0 200 200" class="fast-ring">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#eae8e0" stroke-width="12" />
+          <circle id="fast-progress" cx="100" cy="100" r="80" fill="none" stroke="#7fbf7f" stroke-width="12" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65" transform="rotate(-90 100 100)" />
+        </svg>
+        <div class="ring-label">Elapsed</div>
+        <div id="timer-display" class="ring-time"><span id="timer-label">Fast</span> <span id="timer-time">00:00:00</span></div>
+      </div>
+      <div class="timer-controls">
+        <button id="timer-minus" class="timer-btn" aria-label="Subtract hour">−</button>
+        <span class="timer-window">16 hr</span>
+        <button id="timer-plus" class="timer-btn" aria-label="Add hour">+</button>
+      </div>
+      <button id="timer-start" class="primary-btn timer-start">Start Fast</button>
     </section>
 
     <section class="card">
@@ -93,7 +104,7 @@ export function renderApp(): HTMLElement {
   const updateTimer = () => {
     const timerTime = document.getElementById("timer-time")!;
     const timerLabel = document.getElementById("timer-label")!;
-    if (!timerTime || !timerLabel) return;
+    if (!display) return;
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
     // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
@@ -133,7 +144,7 @@ export function renderApp(): HTMLElement {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
-      timerLabel.textContent = "Fast"; timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      timerLabel.textContent = "Fast"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}` : [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
     }
     animFrame = requestAnimationFrame(updateTimer);
   };
