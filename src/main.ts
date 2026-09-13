@@ -178,14 +178,14 @@ export function renderApp(): HTMLElement {
     const current = raw ? parseInt(raw, 10) : 16;
     const updated = Math.min(24, current + 1);
     window.localStorage.setItem("fast-hours", String(updated));
-    // Refresh display shows updated window
+    document.querySelector(".timer-window")!.textContent = `${updated} hr`;
   });
   document.getElementById("timer-minus")?.addEventListener("click", () => {
     const raw = window.localStorage.getItem("fast-hours");
     const current = raw ? parseInt(raw, 10) : 16;
     const updated = Math.max(4, current - 1);
     window.localStorage.setItem("fast-hours", String(updated));
-    location.reload();
+    document.querySelector(".timer-window")!.textContent = `${updated} hr`;
   });
 
   // Start / Stop fast toggle
