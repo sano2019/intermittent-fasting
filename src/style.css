@@ -214,6 +214,9 @@ footer {
 .timer-start { width: 100%; padding: 14px; border-radius: 24px; font-size: 1em; letter-spacing: 0.02em; }
 
 .ring-label-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+.mode-pills { display: inline-flex; gap: 8px; }
+.pill { padding: 6px 16px; border-radius: 20px; border: 1.5px solid #ccc; background: #fff; color: #777; font-size: 0.75em; letter-spacing: 0.04em; cursor: pointer; transition: all 0.15s ease; }
+.pill.active { background: #c7bfae; color: #333; border-color: #c7bfae; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
 .mode-switch { background: none; border: 1.5px solid var(--fg); border-radius: 50%; width: 28px; height: 28px; font-size: 0.7em; color: var(--fg); cursor: pointer; line-height: 1; }
 
 /* Layout fixes */

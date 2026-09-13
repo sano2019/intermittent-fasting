@@ -49,7 +49,7 @@ export function renderApp(): HTMLElement {
           <circle cx="100" cy="100" r="80" fill="none" stroke="#eae8e0" stroke-width="12" />
           <circle id="fast-progress" cx="100" cy="100" r="80" fill="none" stroke="#7fbf7f" stroke-width="12" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65" transform="rotate(-90 100 100)" />
         </svg>
-        <div class="ring-label-row"><span id="timer-label-text">Elapsed</span> <button id="timer-mode-toggle" class="mode-switch" aria-label="Toggle elapsed / remaining">↻</button></div>
+        <div class="mode-pills"><button id="mode-elapsed" class="pill active">Elapsed</button><button id="mode-remaining" class="pill">Remaining</button></div>
         <div id="timer-display" class="ring-time"><span id="timer-time">00:00:00</span></div>
       </div>
       <div class="timer-controls">
@@ -150,7 +150,6 @@ export function renderApp(): HTMLElement {
         const m = Math.floor((remainingMs % 3600000) / 60000);
         const s = Math.floor((remainingMs % 60000) / 1000);
         timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
-        timerLabel.textContent = remainingMs <= 0 ? "Done" : "Fast";
       } else {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
@@ -194,23 +193,22 @@ export function renderApp(): HTMLElement {
     window.localStorage.setItem("timer-base", new Date().toISOString());
   });
 
-  // Toggle elapsed / remaining mode (switch icon)
+  // Pill toggle: Elapsed / Remaining
   let showRemaining = false;
-  document.getElementById("timer-mode-toggle")?.addEventListener("click", () => {
-    showRemaining = !showRemaining;
-    document.getElementById("timer-label-text")!.textContent = showRemaining ? "Remaining" : "Elapsed";
-    // Force timer redraw
-    // Progress ring: fill based on elapsed / 24h (full circle = 24h)
-    const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
-    if (progressEl) {
-      const totalMs = 24 * 3600000; // ring = 24 hours
-      const pct = Math.min(1, Math.max(0, elapsedMs / totalMs));
-      const dashOffset = 502.65 - (502.65 * pct); // circumference of r=80 circle ~2*pi*80 ≈ 502.65
-      progressEl.style.strokeDashoffset = String(dashOffset);
-    }
-    animFrame = requestAnimationFrame(updateTimer);
+  document.getElementById("mode-elapsed")?.addEventListener("click", () => {
+    showRemaining = false;
+    document.getElementById("mode-elapsed")!.classList.add("active");
+    document.getElementById("mode-remaining")!.classList.remove("active");
+  });
+  document.getElementById("mode-remaining")?.addEventListener("click", () => {
+    showRemaining = true;
+    document.getElementById("mode-remaining")!.classList.add("active");
+    document.getElementById("mode-elapsed")!.classList.remove("active");
   });
 
+  document.getElementById("timer-override")?.addEventListener("click", () => {
+    window.localStorage.setItem("timer-base", new Date().toISOString());
+  });
   document.getElementById("timer-plus")?.addEventListener("click", () => {
     const stored = parseInt(window.localStorage.getItem("fast-hours") || "16", 10);
     const next = Math.min(24, stored + 1);
@@ -222,10 +220,6 @@ export function renderApp(): HTMLElement {
     const next = Math.max(4, stored - 1);
     window.localStorage.setItem("fast-hours", String(next));
     document.querySelector(".timer-window")!.textContent = `${next} hr`;
-  });
-
-  document.getElementById("timer-override")?.addEventListener("click", () => {
-    window.localStorage.setItem("timer-base", new Date().toISOString());
   });
 
   return app;
