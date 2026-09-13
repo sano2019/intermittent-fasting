@@ -217,3 +217,22 @@ footer {
 
 
 .timer-controls.locked { opacity: 0.35; pointer-events: none; }
+
+/* weekly review label alignment */
+.weekly-labels {
+  display: flex;
+  justify-content: flex-start;
+  gap: 32px;
+  padding-left: 6px; /* aligns first label under first dot */
+  font-size: 0.6rem;            /* smaller, calmer */
+  letter-spacing: 0.5px;
+  color: #b8b6ad;                 /* muted amber-grey, calmer */
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.2;
+}
+.weekly-labels span {
+  display: inline-block;
+  width: 22px;
+  text-align: center;
+}
