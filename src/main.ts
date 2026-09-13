@@ -116,16 +116,6 @@ export function renderApp(): HTMLElement {
       return new Date(utcMs).toISOString();
     })() : null;
     const baseStr = window.localStorage.getItem("timer-base") || eatingEndStr || new Date().toISOString();
-    // Backfill test data (Mon-Thu completed, Fri missed, Sat today open)
-    const testEntries = [
-      { date: "2026-09-07", completed: true }, // Mon
-      { date: "2026-09-08", completed: true }, // Tue
-      { date: "2026-09-09", completed: true }, // Wed
-      { date: "2026-09-10", completed: true }, // Thu
-      { date: "2026-09-11", completed: false }, // Fri — broke fast
-      { date: "2026-09-12", completed: null }, // Sat — today, open (not missed)
-    ];
-    window.localStorage.setItem("test-entries", JSON.stringify(testEntries));
     // Read pattern once (already read above at line 90-92; re-use savedProfile)
     const savedPattern = savedProfile?.pattern as string || "custom";
     // For 16:8: fast window = 16h (counted from eating end); feed window = 8h
@@ -227,21 +217,20 @@ function renderWeeklyStats(app: HTMLElement) {
   const raw = window.localStorage.getItem("test-entries");
   const entries = raw ? JSON.parse(raw) : [];
   const days = [t("days.mon"),t("days.tue"),t("days.wed"),t("days.thu"),t("days.fri"),t("days.sat"),t("days.sun")];
-  const dots = days
-    .map((d, i) => {
-      const entry = entries[i];
-      let cls = "indicator"; // default: open/not-set (gray)
-      if (entry) {
-        if (entry.completed === true) cls = "indicator active";
-        else if (entry.completed === false && entry.completed !== null) cls = "indicator missed";
-      }
-      return `<span class="${cls}" title="${d}" style="margin-right:4px;"></span>`;
-    }).join("");
+  // Map weekday index (0=Mon...6=Sun) from entry.date (ISO YYYY-MM-DD)
+  const entryByDay: (typeof entries[0] | undefined)[] = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
+  entries.forEach((e) => {
+    if (!e || !e.date) return;
+    const d = new Date(e.date + "T00:00:00");
+    const wd = d.getDay(); // 0=Sun ... 6=Sat; remap
+    const idx = wd === 0 ? 6 : wd - 1; // Sun(0)->6, Mon(1)->0 ... Sat(6)->5
+    entryByDay[idx] = e;
+  });
   container.innerHTML = `
         <div class="weekly-row">
       ${[0,1,2,3,4,5,6].map(i => {
         const d = days[i];
-        const entry = entries[i];
+        const entry = entryByDay[i];
         let dotCls = "indicator";
         if (entry) {
           if (entry.completed === true) dotCls = "indicator active";
