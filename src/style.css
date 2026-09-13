@@ -221,20 +221,20 @@ footer {
 /* weekly review label alignment */
 .weekly-labels {
   display: flex;
-  justify-content: flex-start;
-  gap: 28px;
+  justify-content: center;
+  gap: 30px;
   font-size: 0.55rem;
   letter-spacing: 0.6px;
   color: #b8b6ad;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 .weekly-labels span {
   display: inline-block;
-  width: 14px;
-  height: 32px;
+  width: 16px;
+  height: 36px;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  text-align: left;
+  text-align: center;
   line-height: 1;
   letter-spacing: 0.12em;
 }
