@@ -135,18 +135,20 @@ export function renderApp(): HTMLElement {
     const elapsedMs = Date.now() - base.getTime();
     const remainingMs = FAST_WINDOW_H * 3600000 - elapsedMs;
     if (showRemaining) {
-      const h = Math.floor(remainingMs / 3600000);
-      const m = Math.floor((remainingMs % 3600000) / 60000);
-        const s = Math.floor((remainingMs % 60000) / 1000);
-        timerTime.textContent = `${sign}${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
-      } else {
+      const sign = remainingMs < 0 ? "-" : "";
+      const absMs = Math.abs(remainingMs);
+      const h = Math.floor(absMs / 3600000);
+      const m = Math.floor((absMs % 3600000) / 60000);
+      const s = Math.floor((absMs % 60000) / 1000);
+      timerTime.textContent = `${sign}${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+    } else {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
-      timerTime.textContent = `${sign}${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
-      const lblFast = document.getElementById("timer-label-text");
-      if (lblFast) lblFast.textContent = showRemaining ? "Remaining" : "Elapsed";
+      timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
     }
+    const lblFast = document.getElementById("timer-label-text");
+    if (lblFast) lblFast.textContent = showRemaining ? "Remaining" : "Elapsed";
     // Progress ring: fill based on elapsed / 24h (full circle = 24h)
     const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
     if (progressEl) {
