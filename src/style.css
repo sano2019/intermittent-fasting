@@ -215,3 +215,5 @@ footer {
 .timer-window { font-size: 1em; font-weight: 600; letter-spacing: 0.06em; color: #555; min-width: 56px; text-align: center; display: inline-block; vertical-align: middle; }
 .timer-start { width: 100%; padding: 14px; border-radius: 24px; font-size: 1em; letter-spacing: 0.02em; background: #c7bfae; color: #222; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
 
+
+.timer-controls.locked { opacity: 0.35; pointer-events: none; }

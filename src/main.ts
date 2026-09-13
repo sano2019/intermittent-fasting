@@ -195,7 +195,7 @@ export function renderApp(): HTMLElement {
     startBtn.textContent = running ? "Stop Fast" : "Start Fast";
     // Lock +/- selectors when fast is running
     const controls = document.querySelector(".timer-controls");
-    if (controls) (controls as HTMLElement).style.display = running ? "none" : "flex";
+    if (controls) (controls as HTMLElement).classList.toggle("locked", running);
   };
   setBtnState();
   startBtn.addEventListener("click", () => {
