@@ -250,3 +250,7 @@ footer {
 .week-day .dot.active { background:#7fbf7f; }
 .week-day .dot.missed { background:#c7bfae; }
 .week-day .dot.indicator { background:#eae8e0; }
+
+.review-stat { font-size:1.1rem; color:#3d3b37; text-align:center; margin:4px 0; }
+.review-note { text-align:center; color:#8a857b; }
+.week-day { align-items:center; }
