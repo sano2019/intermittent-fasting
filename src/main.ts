@@ -238,13 +238,11 @@ function renderWeeklyStats(app: HTMLElement) {
       return `<span class="${cls}" title="${d}" style="margin-right:4px;"></span>`;
     }).join("");
   container.innerHTML = `
-    <div class="weekly-dots">${dots}</div>
-    <div class="weekly-labels"><span>${t("days.mon")}</span><span>${t("days.tue")}</span><span>${t("days.wed")}</span><span>${t("days.thu")}</span><span>${t("days.fri")}</span><span>${t("days.sat")}</span><span>${t("days.sun")}</span></div>
-    <p>${t("review.completed", { count: 3, total: 7 })}</p>
-    <p>${t("review.streak", { days: 2 })}</p>
-    <p class="small">${t("review.note")}</p>
-  `;
-}
+        <div class="weekly-row">
+      ${[0,1,2,3,4,5,6].map(i => {
+        const d = days[i];
+        const dotCls = dots.split("</span>")[i] ? dots.split("</span>")[i].match(/class="([^"]+)"/)?.[1] || "indicator" : "indicator";
+        return `<div class="week-day"><span class="${dotCls}" title="${d}"></span><span class="label">${d.substring(0,3)}</span></div>`;
+      }).join("")}
+    </div>
 
-// PWA: register service worker
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});

@@ -237,3 +237,11 @@ footer {
 
 .weekly-dots { display:flex; justify-content:center; gap:36px; margin-top:8px; }
 .weekly-dots span { display:inline-block; width:18px; height:18px; border-radius:50%; }
+
+/* 7 column weekly review */
+.weekly-row { display:flex; justify-content:center; gap:36px; margin-top:14px; }
+.week-day { display:flex; flex-direction:column; align-items:center; gap:8px; min-width:24px; }
+.week-day .dot { width:16px; height:16px; border-radius:50%; background:#eae8e0; display:inline-block; }
+.week-day .dot.active { background:#7fbf7f; }
+.week-day .dot.missed { background:#c7bfae; }
+.week-day .label { font-size:0.6rem; color:#b8b6ad; letter-spacing:0.3px; text-align:center; line-height:1; }
