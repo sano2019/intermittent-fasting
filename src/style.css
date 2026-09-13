@@ -213,3 +213,14 @@ footer {
 
 .ring-label-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
 .mode-switch { background: none; border: 1.5px solid var(--fg); border-radius: 50%; width: 28px; height: 28px; font-size: 0.7em; color: var(--fg); cursor: pointer; line-height: 1; }
+
+/* Layout fixes */
+.timer-ring-card { padding: 16px; }
+.ring-label-row { margin-top: 8px; margin-bottom: 4px; }
+.ring-time { font-size: 2em; margin-bottom: 16px; }
+.timer-controls { gap: 12px; margin: 16px 0 12px; }
+.timer-start { background: #c7bfae; color: #222; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+.timer-btn { border-color: #ccc; color: #333; }
+.timer-window { color: #555; }
+/* Hide broken old label overlap */
+#timer-label-text { font-size: 0.85em; letter-spacing: 0.04em; color: #777; }

@@ -141,20 +141,21 @@ export function renderApp(): HTMLElement {
       const m = Math.floor((feedMs % 3600000) / 60000);
       const s = Math.floor((feedMs % 60000) / 1000);
       timerLabel.textContent = "Feed"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
-    // Mode: remaining time = max(0, FAST_WINDOW_H * 3600000 - elapsedMs)
-    const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
-    if (showRemaining) {
-      const h = Math.floor(remainingMs / 3600000);
-      const m = Math.floor((remainingMs % 3600000) / 60000);
-      const s = Math.floor((remainingMs % 60000) / 1000);
-      timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
-      timerLabel.textContent = remainingMs <= 0 ? "Done" : "Fast";
-    }
     } else {
+      // Mode: remaining time = max(0, FAST_WINDOW_H * 3600000 - elapsedMs)
+      const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
+      if (showRemaining) {
+        const h = Math.floor(remainingMs / 3600000);
+        const m = Math.floor((remainingMs % 3600000) / 60000);
+        const s = Math.floor((remainingMs % 60000) / 1000);
+        timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+        timerLabel.textContent = remainingMs <= 0 ? "Done" : "Fast";
+      } else {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
       timerLabel.textContent = "Fast"; timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      }
     }
     // Progress ring: fill based on elapsed / 24h (full circle = 24h)
     const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
