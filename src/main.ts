@@ -179,7 +179,6 @@ export function renderApp(): HTMLElement {
     const updated = Math.min(24, current + 1);
     window.localStorage.setItem("fast-hours", String(updated));
     // Refresh display shows updated window
-    location.reload(); // simple refresh; or re-render timer
   });
   document.getElementById("timer-minus")?.addEventListener("click", () => {
     const raw = window.localStorage.getItem("fast-hours");
