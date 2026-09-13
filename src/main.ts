@@ -87,7 +87,10 @@ export function renderApp(): HTMLElement {
   const updateTimer = () => {
     const display = document.getElementById("timer-display");
     if (!display) return;
-    const baseStr = window.localStorage.getItem("timer-base");
+    const profileRaw = window.localStorage.getItem("profile");
+    const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
+    const eatingEndStr = savedProfile?.endTime ? new Date().toISOString().split("T")[0] + "T" + savedProfile.endTime + ":00" : null;
+    const baseStr = window.localStorage.getItem("timer-base") || eatingEndStr || new Date().toISOString();
     // Backfill test data (Mon-Thu completed, Fri missed, Sat today open)
     const testEntries = [
       { date: "2026-09-07", completed: true }, // Mon

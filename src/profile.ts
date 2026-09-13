@@ -2,7 +2,7 @@ import type { Profile, FastingPattern } from "./types";
 import { loadLang, t } from "./i18n";
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
-  { key: "16:8", label: "16:8", note: "16h fast / 8h window" },
+  { key: "16:8", label: "16:8", note: "8h eating / 16h fast" },
   { key: "5:2", label: "5:2", note: "5 days normal / 2 light" },
   { key: "OMAD", label: "OMAD", note: "One meal a day" },
   { key: "custom", label: "Custom", note: "Your own rhythm" },
