@@ -205,7 +205,8 @@ footer {
 .ring-wrap { position: relative; width: 200px; height: 200px; margin: 0 auto 16px; }
 .fast-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
 .ring-label { position: absolute; top: 72px; left: 0; right: 0; text-align: center; font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-.ring-time { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; font-family: monospace; font-size: 1.6em; font-weight: 600; color: var(--fg); }
+.ring-time { position: absolute; top: 50%; left: 0; right: 0; text-align: center; transform: translateY(-50%); font-family: monospace; font-size: 1.3em; font-weight: 600; color: var(--fg); letter-spacing: 0.02em; }
+.ring-label-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 200px; font-size: 0.8em; letter-spacing: 0.05em; color: var(--fg); }
 .timer-controls { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 8px 0 16px; }
 .timer-btn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--fg); background: transparent; color: var(--fg); font-size: 1.2em; line-height: 1; cursor: pointer; }
 .timer-window { font-size: 1em; font-weight: 500; letter-spacing: 0.04em; }

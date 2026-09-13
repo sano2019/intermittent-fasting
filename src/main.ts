@@ -103,8 +103,7 @@ export function renderApp(): HTMLElement {
   let animFrame: number;
   const updateTimer = () => {
     const timerTime = document.getElementById("timer-time")!;
-    const timerLabel = document.getElementById("timer-label")!;
-    if (!timerTime || !timerLabel) return;
+    if (!timerTime) return;
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
     // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
@@ -140,7 +139,9 @@ export function renderApp(): HTMLElement {
       const h = Math.floor(feedMs / 3600000);
       const m = Math.floor((feedMs % 3600000) / 60000);
       const s = Math.floor((feedMs % 60000) / 1000);
-      timerLabel.textContent = "Feed"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      const lblFeed = document.getElementById("timer-label-text");
+      if (lblFeed) lblFeed.textContent = "Feed";
     } else {
       // Mode: remaining time = max(0, FAST_WINDOW_H * 3600000 - elapsedMs)
       const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
@@ -154,7 +155,9 @@ export function renderApp(): HTMLElement {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
-      timerLabel.textContent = "Fast"; timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      const lblFast = document.getElementById("timer-label-text");
+      if (lblFast) lblFast.textContent = showRemaining ? "Remaining" : "Elapsed";
       }
     }
     // Progress ring: fill based on elapsed / 24h (full circle = 24h)
