@@ -242,7 +242,12 @@ function renderWeeklyStats(app: HTMLElement) {
       ${[0,1,2,3,4,5,6].map(i => {
         const d = days[i];
         const dotCls = dots.split("</span>")[i] ? dots.split("</span>")[i].match(/class="([^"]+)"/)?.[1] || "indicator" : "indicator";
-        return `<div class="week-day"><span class="${dotCls}" title="${d}"></span><span class="label">${d.substring(0,3)}</span></div>`;
+        const labelText = d.length > 3 ? d.substring(0, 3) : d;
+        return `<div class="week-day"><span class="dot ${dotCls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
       }).join("")}
     </div>
-
+    <p class="small">${t("review.completed", { count: 3, total: 7 })}</p>
+    <p class="small">${t("review.streak", { days: 2 })}</p>
+    <p class="small">${t("review.note")}</p>
+  `;
+}

@@ -245,3 +245,8 @@ footer {
 .week-day .dot.active { background:#7fbf7f; }
 .week-day .dot.missed { background:#c7bfae; }
 .week-day .label { font-size:0.6rem; color:#b8b6ad; letter-spacing:0.3px; text-align:center; line-height:1; }
+
+.week-day .dot { width:18px; height:18px; border-radius:50%; display:inline-block; }
+.week-day .dot.active { background:#7fbf7f; }
+.week-day .dot.missed { background:#c7bfae; }
+.week-day .dot.indicator { background:#eae8e0; }
