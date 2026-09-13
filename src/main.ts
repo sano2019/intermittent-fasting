@@ -189,8 +189,21 @@ export function renderApp(): HTMLElement {
     location.reload();
   });
 
-  document.getElementById("timer-start")?.addEventListener("click", () => {
-    window.localStorage.setItem("timer-base", new Date().toISOString());
+  // Start / Stop fast toggle
+  const startBtn = document.getElementById("timer-start")!;
+  const setBtnState = () => {
+    const running = !!window.localStorage.getItem("timer-base");
+    startBtn.textContent = running ? "Stop Fast" : "Start Fast";
+  };
+  setBtnState();
+  startBtn.addEventListener("click", () => {
+    const running = !!window.localStorage.getItem("timer-base");
+    if (running) {
+      window.localStorage.removeItem("timer-base");
+    } else {
+      window.localStorage.setItem("timer-base", new Date().toISOString());
+    }
+    setBtnState();
   });
 
   // Pill toggle: Elapsed / Remaining
