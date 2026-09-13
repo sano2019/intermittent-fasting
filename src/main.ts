@@ -54,7 +54,7 @@ export function renderApp(): HTMLElement {
       </div>
       <div class="timer-controls">
         <button id="timer-minus" class="timer-btn" aria-label="Subtract hour">−</button>
-        <span class="timer-window">16 hr</span>
+        <span class="timer-window">${window.localStorage.getItem("fast-hours") ? window.localStorage.getItem("fast-hours") + " hr" : "16 hr"}</span>
         <button id="timer-plus" class="timer-btn" aria-label="Add hour">+</button>
       </div>
       <button id="timer-start" class="primary-btn timer-start">Start Fast</button>
@@ -220,18 +220,6 @@ export function renderApp(): HTMLElement {
 
   document.getElementById("timer-override")?.addEventListener("click", () => {
     window.localStorage.setItem("timer-base", new Date().toISOString());
-  });
-  document.getElementById("timer-plus")?.addEventListener("click", () => {
-    const stored = parseInt(window.localStorage.getItem("fast-hours") || "16", 10);
-    const next = Math.min(24, stored + 1);
-    window.localStorage.setItem("fast-hours", String(next));
-    document.querySelector(".timer-window")!.textContent = `${next} hr`;
-  });
-  document.getElementById("timer-minus")?.addEventListener("click", () => {
-    const stored = parseInt(window.localStorage.getItem("fast-hours") || "16", 10);
-    const next = Math.max(4, stored - 1);
-    window.localStorage.setItem("fast-hours", String(next));
-    document.querySelector(".timer-window")!.textContent = `${next} hr`;
   });
 
   return app;
