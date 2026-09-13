@@ -32,6 +32,18 @@
   "pattern.OMAD.note": "Một bữa mỗi ngày",
   "pattern.custom": "Tùy chỉnh",
   "pattern.custom.note": "Nhịp riêng của bạn",
+  "days.mon": "T2",
+  "days.tue": "T3",
+  "days.wed": "T4",
+  "days.thu": "T5",
+  "days.fri": "T6",
+  "days.sat": "T7",
+  "days.sun": "CN",
+  "timer.elapsed": "Đã qua",
+  "timer.remaining": "Còn lại",
+  "timer.start": "Bắt đầu nhịn",
+  "timer.stop": "Dừng nhịn",
+  "timer.unit": "giờ",
   "timer.override": "Bắt đầu từ bây giờ",
   "profile.saved": "Đã lưu"
 }

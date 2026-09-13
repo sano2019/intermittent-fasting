@@ -44,7 +44,7 @@ export function renderApp(): HTMLElement {
 
     <section class="card timer-ring-card" id="timer-card">
       <h2 class="timer-card-title">${t("tracking.fast")}</h2>
-      <div class="mode-pills"><button id="mode-elapsed" class="pill active" data-i18n="timer.elapsed">Elapsed</button><button id="mode-remaining" class="pill" data-i18n="timer.remaining">Remaining</button></div>
+      <div class="mode-pills"><button id="mode-elapsed" class="pill active">${t("timer.elapsed")}</button><button id="mode-remaining" class="pill">${t("timer.remaining")}</button></div>
       <div class="ring-wrap">
         <svg viewBox="0 0 200 200" class="fast-ring">
           <circle cx="100" cy="100" r="80" fill="none" stroke="#eae8e0" stroke-width="12" />
@@ -239,14 +239,13 @@ function renderWeeklyStats(app: HTMLElement) {
     }).join("");
   container.innerHTML = `
     <div class="weekly-dots">${dots}</div>
+    <div class="weekly-labels" style="display:flex;justify-content:center;gap:6px;font-size:0.7em;color:var(--muted);margin-top:4px;">      <span>${t("days.mon")}</span><span>${t("days.tue")}</span><span>${t("days.wed")}</span><span>${t("days.thu")}</span><span>${t("days.fri")}</span><span>${t("days.sat")}</span><span>${t("days.sun")}</span></div>
     <div class="weekly-labels" style="display:flex;justify-content:center;gap:8px;font-size:0.7em;color:var(--muted);margin-top:4px;"></div>
     <p>${t("review.completed", { count: 3, total: 7 })}</p>
     <p>${t("review.streak", { days: 2 })}</p>
     <p class="small">${t("review.note")}</p>
   `;
 }
-
-renderApp();
 
 // PWA: register service worker
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
