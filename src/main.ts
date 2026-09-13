@@ -43,8 +43,8 @@ export function renderApp(): HTMLElement {
     </section>
 
     <section class="card" id="timer-card">
-      <h2>${t("tracking.timer")}</h2>
-      <p id="timer-display" class="small">00:00:00</p>
+      <h2>${t("tracking.fast")}</h2>
+      <p id="timer-display" class="timer-value"><span id="timer-label" class="timer-label">Fast</span><span id="timer-time" class="timer-time">00:00:00</span></p>
       <span id="fast-indicator" class="indicator"></span>
       <button id="timer-override">${t("timer.override")}</button>
     </section>
@@ -91,7 +91,8 @@ export function renderApp(): HTMLElement {
   // Frame-based timer for accuracy (requestAnimationFrame)
   let animFrame: number;
   const updateTimer = () => {
-    const display = document.getElementById("timer-display");
+    const timerTime = document.getElementById("timer-time")!;
+    const timerLabel = document.getElementById("timer-label")!;
     if (!display) return;
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
@@ -127,12 +128,12 @@ export function renderApp(): HTMLElement {
       const h = Math.floor(feedMs / 3600000);
       const m = Math.floor((feedMs % 3600000) / 60000);
       const s = Math.floor((feedMs % 60000) / 1000);
-      display.textContent = `Feed: ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      timerLabel.textContent = "Feed"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
     } else {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
-      display.textContent = FAST_WINDOW_H > 0 ? `Fast: ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}` : [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+      timerLabel.textContent = "Fast"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}` : [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
     }
     animFrame = requestAnimationFrame(updateTimer);
   };

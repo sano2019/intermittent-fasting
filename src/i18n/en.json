@@ -30,7 +30,7 @@
   "pattern.custom": "Custom",
   "pattern.custom.note": "Your own rhythm",
   "footer.note": "Local tracking — cloud sync feature-flagged for future premium tier.",
-  "tracking.timer": "Fasting timer",
+  "tracking.fast": "Fasting timer",
   "tracking.start": "Window started",
   "tracking.end": "Window complete",
   "timer.override": "Start from now"

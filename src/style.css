@@ -195,3 +195,6 @@ footer {
   color: var(--muted);
   font-size: 0.75rem;
 }
+
+.timer-label { font-weight: 600; color: var(--fg); margin-right: 6px; display: inline; }
+.timer-time { font-family: monospace; font-size: 1.05em; color: var(--fg); }
