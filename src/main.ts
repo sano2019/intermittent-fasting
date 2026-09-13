@@ -193,6 +193,9 @@ export function renderApp(): HTMLElement {
   const setBtnState = () => {
     const running = !!window.localStorage.getItem("timer-base");
     startBtn.textContent = running ? "Stop Fast" : "Start Fast";
+    // Lock +/- selectors when fast is running
+    const controls = document.querySelector(".timer-controls");
+    if (controls) (controls as HTMLElement).style.display = running ? "none" : "flex";
   };
   setBtnState();
   startBtn.addEventListener("click", () => {
