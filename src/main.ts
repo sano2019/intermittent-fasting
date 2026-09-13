@@ -93,7 +93,7 @@ export function renderApp(): HTMLElement {
   const updateTimer = () => {
     const timerTime = document.getElementById("timer-time")!;
     const timerLabel = document.getElementById("timer-label")!;
-    if (!display) return;
+    if (!timerTime || !timerLabel) return;
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
     // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
