@@ -238,7 +238,7 @@ function renderWeeklyStats(app: HTMLElement) {
           else dotCls = "dot indicator";
         }
         const labelText = d.length > 3 ? d.substring(0, 3) : d;
-        return `<div class="week-day"><span class="dot ${dotCls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
+        return `<div class="week-day"><span class="dot ${stateCls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
       }).join("")}
     </div>
     <p class="review-stat">${t("review.completed", { count: 3, total: 7 })}</p>
