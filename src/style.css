@@ -223,20 +223,16 @@ footer {
   display: flex;
   justify-content: center;
   gap: 36px;
-  font-size: 0.55rem;
-  letter-spacing: 0.6px;
+  font-size: 0.65rem;
+  letter-spacing: 0.4px;
   color: #b8b6ad;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 .weekly-labels span {
   display: inline-block;
-  width: 16px;
-  height: 36px;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  width: 26px;
   text-align: center;
-  line-height: 1;
-  letter-spacing: 0.12em;
+  line-height: 1.2;
 }
 
 .weekly-dots { display:flex; justify-content:center; gap:36px; margin-top:8px; }
