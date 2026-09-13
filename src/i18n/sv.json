@@ -45,5 +45,6 @@
   "pattern.custom": "Anpassad",
   "pattern.custom.note": "Din egen rytm",
   "timer.override": "Börja från nu",
-  "profile.saved": "Sparad"
+  "profile.saved": "Sparad",
+  "tracking.fast": "Spårning"
 }

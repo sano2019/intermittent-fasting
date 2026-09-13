@@ -45,5 +45,6 @@
   "timer.stop": "Dừng nhịn",
   "timer.unit": "giờ",
   "timer.override": "Bắt đầu từ bây giờ",
-  "profile.saved": "Đã lưu"
+  "profile.saved": "Đã lưu",
+  "tracking.fast": "Nhịn ăn"
 }

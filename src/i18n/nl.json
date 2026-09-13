@@ -45,5 +45,6 @@
   "pattern.custom": "Aangepast",
   "pattern.custom.note": "Je eigen ritme",
   "timer.override": "Begin vanaf nu",
-  "profile.saved": "Opgeslagen"
+  "profile.saved": "Opgeslagen",
+  "tracking.fast": "Vasten"
 }
