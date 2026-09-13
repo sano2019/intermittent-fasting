@@ -144,7 +144,7 @@ export function renderApp(): HTMLElement {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
-      timerLabel.textContent = "Fast"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}` : [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+      timerLabel.textContent = "Fast"; timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
     }
     animFrame = requestAnimationFrame(updateTimer);
   };
