@@ -101,11 +101,9 @@ export function renderApp(): HTMLElement {
       { date: "2026-09-12", completed: null }, // Sat — today, open (not missed)
     ];
     window.localStorage.setItem("test-entries", JSON.stringify(testEntries));
-    // Read saved pattern from adapter storage (synced by profile save)
-    const profileRaw = window.localStorage.getItem("profile");
-    const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
-    const savedPattern = (savedProfile?.pattern as string) || "custom";
-    // For 16:8: fast window = 16h, feed window = 8h; generic for others (to expand)
+    // Read pattern once (already read above at line 90-92; re-use savedProfile)
+    const savedPattern = savedProfile?.pattern as string || "custom";
+    // For 16:8: fast window = 16h (counted from eating end); feed window = 8h
     const FAST_WINDOW_H = savedPattern === "16:8" ? 16 : 0; // 0 = no split (generic)
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
