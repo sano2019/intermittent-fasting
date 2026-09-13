@@ -73,11 +73,17 @@ export function renderApp(): HTMLElement {
   // Simple interaction hook — keeps function separate from style
   const todayCheck = app.querySelector<HTMLInputElement>("#today-check")!;
   todayCheck.addEventListener("change", () => {
-    if (todayCheck.checked) {
-      todayCheck.parentElement!.classList.add("completed");
-    } else {
-      todayCheck.parentElement!.classList.remove("completed");
-    }
+    const completed = todayCheck.checked;
+    todayCheck.parentElement!.classList.toggle("completed", completed);
+    // Persist to test-entries: today (Sat 2026-09-13) = completed true/false/null
+    const todayStr = new Date().toISOString().split("T")[0];
+    const raw = window.localStorage.getItem("test-entries");
+    const entries = raw ? JSON.parse(raw) : [];
+    const idx = entries.findIndex((e: any) => e.date === todayStr);
+    const entry = { date: todayStr, completed: completed ? true : (completed === false ? false : null) };
+    if (idx >= 0) entries[idx] = entry; else entries.push(entry);
+    window.localStorage.setItem("test-entries", JSON.stringify(entries));
+    renderWeeklyStats(app); // refresh dots
   });
 
   renderWeeklyStats(app);
@@ -89,7 +95,15 @@ export function renderApp(): HTMLElement {
     if (!display) return;
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
-    const eatingEndStr = savedProfile?.endTime ? new Date().toISOString().split("T")[0] + "T" + savedProfile.endTime + ":00" : null;
+    // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
+    const eatingEndStr = savedProfile?.endTime ? (() => {
+      const [h, m] = savedProfile.endTime.split(":").map(Number);
+      const d = new Date();
+      d.setHours(h, m, 0, 0);
+      // Offset UTC by -7h for Vietnam local interpretation (stored as UTC base)
+      const utcMs = d.getTime() - 7 * 3600000;
+      return new Date(utcMs).toISOString();
+    })() : null;
     const baseStr = window.localStorage.getItem("timer-base") || eatingEndStr || new Date().toISOString();
     // Backfill test data (Mon-Thu completed, Fri missed, Sat today open)
     const testEntries = [
