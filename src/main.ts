@@ -101,7 +101,6 @@ export function renderApp(): HTMLElement {
 
   // Frame-based timer for accuracy (requestAnimationFrame)
   let animFrame: number;
-  let showRemaining = false; // toggled by mode switch
   const updateTimer = () => {
     const timerTime = document.getElementById("timer-time")!;
     const timerLabel = document.getElementById("timer-label")!;
@@ -157,6 +156,14 @@ export function renderApp(): HTMLElement {
       const s = Math.floor((elapsedMs % 60000) / 1000);
       timerLabel.textContent = "Fast"; timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
     }
+    // Progress ring: fill based on elapsed / 24h (full circle = 24h)
+    const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
+    if (progressEl) {
+      const totalMs = 24 * 3600000; // ring = 24 hours
+      const pct = Math.min(1, Math.max(0, elapsedMs / totalMs));
+      const dashOffset = 502.65 - (502.65 * pct); // circumference of r=80 circle ~2*pi*80 ≈ 502.65
+      progressEl.style.strokeDashoffset = String(dashOffset);
+    }
     animFrame = requestAnimationFrame(updateTimer);
   };
   animFrame = requestAnimationFrame(updateTimer);
@@ -185,6 +192,14 @@ export function renderApp(): HTMLElement {
     showRemaining = !showRemaining;
     document.getElementById("timer-label-text")!.textContent = showRemaining ? "Remaining" : "Elapsed";
     // Force timer redraw
+    // Progress ring: fill based on elapsed / 24h (full circle = 24h)
+    const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
+    if (progressEl) {
+      const totalMs = 24 * 3600000; // ring = 24 hours
+      const pct = Math.min(1, Math.max(0, elapsedMs / totalMs));
+      const dashOffset = 502.65 - (502.65 * pct); // circumference of r=80 circle ~2*pi*80 ≈ 502.65
+      progressEl.style.strokeDashoffset = String(dashOffset);
+    }
     animFrame = requestAnimationFrame(updateTimer);
   });
 
