@@ -44,7 +44,7 @@ export function renderApp(): HTMLElement {
 
     <section class="card timer-ring-card" id="timer-card">
       <h2 class="timer-card-title">${t("tracking.fast")}</h2>
-      <div class="mode-pills"><button id="mode-elapsed" class="pill active">Elapsed</button><button id="mode-remaining" class="pill">Remaining</button></div>
+      <div class="mode-pills"><button id="mode-elapsed" class="pill active" data-i18n="timer.elapsed">Elapsed</button><button id="mode-remaining" class="pill" data-i18n="timer.remaining">Remaining</button></div>
       <div class="ring-wrap">
         <svg viewBox="0 0 200 200" class="fast-ring">
           <circle cx="100" cy="100" r="80" fill="none" stroke="#eae8e0" stroke-width="12" />
@@ -54,10 +54,10 @@ export function renderApp(): HTMLElement {
       </div>
       <div class="timer-controls">
         <button id="timer-minus" class="timer-btn" aria-label="Subtract hour">−</button>
-        <span class="timer-window">${window.localStorage.getItem("fast-hours") ? window.localStorage.getItem("fast-hours") + " hr" : "16 hr"}</span>
+        <span class="timer-window">${(window.localStorage.getItem("fast-hours") || "16") + " " + t("timer.unit")}</span>
         <button id="timer-plus" class="timer-btn" aria-label="Add hour">+</button>
       </div>
-      <button id="timer-start" class="primary-btn timer-start">Start Fast</button>
+      <button id="timer-start" class="primary-btn timer-start">${t("timer.start")}</button>
     </section>
 
     <section class="card">
@@ -168,21 +168,21 @@ export function renderApp(): HTMLElement {
     const current = raw ? parseInt(raw, 10) : 16;
     const updated = Math.min(24, current + 1);
     window.localStorage.setItem("fast-hours", String(updated));
-    document.querySelector(".timer-window")!.textContent = `${updated} hr`;
+    document.querySelector(".timer-window")!.textContent = `${updated} ${t("timer.unit")}`;
   });
   document.getElementById("timer-minus")?.addEventListener("click", () => {
     const raw = window.localStorage.getItem("fast-hours");
     const current = raw ? parseInt(raw, 10) : 16;
     const updated = Math.max(4, current - 1);
     window.localStorage.setItem("fast-hours", String(updated));
-    document.querySelector(".timer-window")!.textContent = `${updated} hr`;
+    document.querySelector(".timer-window")!.textContent = `${updated} ${t("timer.unit")}`;
   });
 
   // Start / Stop fast toggle
   const startBtn = document.getElementById("timer-start")!;
   const setBtnState = () => {
     const running = !!window.localStorage.getItem("timer-base");
-    startBtn.textContent = running ? "Stop Fast" : "Start Fast";
+    startBtn.textContent = running ? t("timer.stop") : t("timer.start");
     // Lock +/- selectors when fast is running
     const controls = document.querySelector(".timer-controls");
     if (controls) (controls as HTMLElement).classList.toggle("locked", running);
@@ -202,11 +202,15 @@ export function renderApp(): HTMLElement {
   let showRemaining = false;
   document.getElementById("mode-elapsed")?.addEventListener("click", () => {
     showRemaining = false;
+    document.getElementById("mode-elapsed")!.textContent = t("timer.elapsed");
+    document.getElementById("mode-remaining")!.textContent = t("timer.remaining");
     document.getElementById("mode-elapsed")!.classList.add("active");
     document.getElementById("mode-remaining")!.classList.remove("active");
   });
   document.getElementById("mode-remaining")?.addEventListener("click", () => {
     showRemaining = true;
+    document.getElementById("mode-elapsed")!.textContent = t("timer.elapsed");
+    document.getElementById("mode-remaining")!.textContent = t("timer.remaining");
     document.getElementById("mode-remaining")!.classList.add("active");
     document.getElementById("mode-elapsed")!.classList.remove("active");
   });
@@ -222,7 +226,8 @@ function renderWeeklyStats(app: HTMLElement) {
   const container = app.querySelector("#weekly-stats")!;
   const raw = window.localStorage.getItem("test-entries");
   const entries = raw ? JSON.parse(raw) : [];
-  const dots = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+  const days = [t("days.mon"),t("days.tue"),t("days.wed"),t("days.thu"),t("days.fri"),t("days.sat"),t("days.sun")];
+  const dots = days
     .map((d, i) => {
       const entry = entries[i];
       let cls = "indicator"; // default: open/not-set (gray)
@@ -234,6 +239,7 @@ function renderWeeklyStats(app: HTMLElement) {
     }).join("");
   container.innerHTML = `
     <div class="weekly-dots">${dots}</div>
+    <div class="weekly-labels" style="display:flex;justify-content:center;gap:8px;font-size:0.7em;color:var(--muted);margin-top:4px;"></div>
     <p>${t("review.completed", { count: 3, total: 7 })}</p>
     <p>${t("review.streak", { days: 2 })}</p>
     <p class="small">${t("review.note")}</p>
