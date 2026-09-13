@@ -45,11 +45,11 @@ export function renderApp(): HTMLElement {
     <section class="card timer-ring-card" id="timer-card">
       <h2 class="timer-card-title">${t("tracking.fast")}</h2>
       <div class="ring-wrap">
+        <div class="mode-pills"><button id="mode-elapsed" class="pill active">Elapsed</button><button id="mode-remaining" class="pill">Remaining</button></div>
         <svg viewBox="0 0 200 200" class="fast-ring">
           <circle cx="100" cy="100" r="80" fill="none" stroke="#eae8e0" stroke-width="12" />
           <circle id="fast-progress" cx="100" cy="100" r="80" fill="none" stroke="#7fbf7f" stroke-width="12" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65" transform="rotate(-90 100 100)" />
         </svg>
-        <div class="mode-pills"><button id="mode-elapsed" class="pill active">Elapsed</button><button id="mode-remaining" class="pill">Remaining</button></div>
         <div id="timer-display" class="ring-time"><span id="timer-time">00:00:00</span></div>
       </div>
       <div class="timer-controls">
