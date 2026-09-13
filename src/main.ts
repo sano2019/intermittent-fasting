@@ -49,8 +49,8 @@ export function renderApp(): HTMLElement {
           <circle cx="100" cy="100" r="80" fill="none" stroke="#eae8e0" stroke-width="12" />
           <circle id="fast-progress" cx="100" cy="100" r="80" fill="none" stroke="#7fbf7f" stroke-width="12" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65" transform="rotate(-90 100 100)" />
         </svg>
-        <div class="ring-label">Elapsed</div>
-        <div id="timer-display" class="ring-time"><span id="timer-label">Fast</span> <span id="timer-time">00:00:00</span></div>
+        <div class="ring-label-row"><span id="timer-label-text">Elapsed</span> <button id="timer-mode-toggle" class="mode-switch" aria-label="Toggle elapsed / remaining">↻</button></div>
+        <div id="timer-display" class="ring-time"><span id="timer-time">00:00:00</span></div>
       </div>
       <div class="timer-controls">
         <button id="timer-minus" class="timer-btn" aria-label="Subtract hour">−</button>
@@ -101,10 +101,11 @@ export function renderApp(): HTMLElement {
 
   // Frame-based timer for accuracy (requestAnimationFrame)
   let animFrame: number;
+  let showRemaining = false; // toggled by mode switch
   const updateTimer = () => {
     const timerTime = document.getElementById("timer-time")!;
     const timerLabel = document.getElementById("timer-label")!;
-    if (!display) return;
+    if (!timerTime || !timerLabel) return;
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
     // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
@@ -130,7 +131,8 @@ export function renderApp(): HTMLElement {
     // Read pattern once (already read above at line 90-92; re-use savedProfile)
     const savedPattern = savedProfile?.pattern as string || "custom";
     // For 16:8: fast window = 16h (counted from eating end); feed window = 8h
-    const FAST_WINDOW_H = savedPattern === "16:8" ? 16 : 0; // 0 = no split (generic)
+    const savedHours = window.localStorage.getItem("fast-hours") ? parseInt(window.localStorage.getItem("fast-hours")!, 10) : 16;
+    const FAST_WINDOW_H = savedHours;
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
     if (FAST_WINDOW_H > 0 && elapsedMs > FAST_WINDOW_H * 3600000) {
@@ -140,6 +142,15 @@ export function renderApp(): HTMLElement {
       const m = Math.floor((feedMs % 3600000) / 60000);
       const s = Math.floor((feedMs % 60000) / 1000);
       timerLabel.textContent = "Feed"; timerTime.textContent = ` ${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+    // Mode: remaining time = max(0, FAST_WINDOW_H * 3600000 - elapsedMs)
+    const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
+    if (showRemaining) {
+      const h = Math.floor(remainingMs / 3600000);
+      const m = Math.floor((remainingMs % 3600000) / 60000);
+      const s = Math.floor((remainingMs % 60000) / 1000);
+      timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      timerLabel.textContent = remainingMs <= 0 ? "Done" : "Fast";
+    }
     } else {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
@@ -151,6 +162,32 @@ export function renderApp(): HTMLElement {
   animFrame = requestAnimationFrame(updateTimer);
 
   // Override: reset timer base to now (handles oversleeping)
+  // Adjust fast window hours (+ / -)
+  document.getElementById("timer-plus")?.addEventListener("click", () => {
+    const raw = window.localStorage.getItem("fast-hours");
+    const current = raw ? parseInt(raw, 10) : 16;
+    const updated = Math.min(24, current + 1);
+    window.localStorage.setItem("fast-hours", String(updated));
+    // Refresh display shows updated window
+    location.reload(); // simple refresh; or re-render timer
+  });
+  document.getElementById("timer-minus")?.addEventListener("click", () => {
+    const raw = window.localStorage.getItem("fast-hours");
+    const current = raw ? parseInt(raw, 10) : 16;
+    const updated = Math.max(4, current - 1);
+    window.localStorage.setItem("fast-hours", String(updated));
+    location.reload();
+  });
+
+  // Toggle elapsed / remaining mode (switch icon)
+  let showRemaining = false;
+  document.getElementById("timer-mode-toggle")?.addEventListener("click", () => {
+    showRemaining = !showRemaining;
+    document.getElementById("timer-label-text")!.textContent = showRemaining ? "Remaining" : "Elapsed";
+    // Force timer redraw
+    animFrame = requestAnimationFrame(updateTimer);
+  });
+
   document.getElementById("timer-override")?.addEventListener("click", () => {
     window.localStorage.setItem("timer-base", new Date().toISOString());
   });
