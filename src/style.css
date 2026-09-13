@@ -222,16 +222,19 @@ footer {
 .weekly-labels {
   display: flex;
   justify-content: flex-start;
-  gap: 32px;
-  font-size: 0.6rem;            /* smaller, calmer */
-  letter-spacing: 0.5px;
-  color: #b8b6ad;                 /* muted amber-grey, calmer */
-  margin-top: 8px;
-  text-align: center;
-  line-height: 1.2;
+  gap: 28px;
+  font-size: 0.55rem;
+  letter-spacing: 0.6px;
+  color: #b8b6ad;
+  margin-top: 14px;
 }
 .weekly-labels span {
   display: inline-block;
-  width: 22px;
-  text-align: center;
+  width: 14px;
+  height: 32px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: left;
+  line-height: 1;
+  letter-spacing: 0.12em;
 }
