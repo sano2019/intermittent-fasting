@@ -133,17 +133,17 @@ export function renderApp(): HTMLElement {
     const FAST_WINDOW_H = savedHours;
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
-    const remainingMs = Math.max(0, FAST_WINDOW_H * 3600000 - elapsedMs);
+    const remainingMs = FAST_WINDOW_H * 3600000 - elapsedMs;
     if (showRemaining) {
       const h = Math.floor(remainingMs / 3600000);
       const m = Math.floor((remainingMs % 3600000) / 60000);
         const s = Math.floor((remainingMs % 60000) / 1000);
-        timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+        timerTime.textContent = `${sign}${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
       } else {
       const h = Math.floor(elapsedMs / 3600000);
       const m = Math.floor((elapsedMs % 3600000) / 60000);
       const s = Math.floor((elapsedMs % 60000) / 1000);
-      timerTime.textContent = `${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
+      timerTime.textContent = `${sign}${[h, m, s].map((n) => String(n).padStart(2, "0")).join(":")}`;
       const lblFast = document.getElementById("timer-label-text");
       if (lblFast) lblFast.textContent = showRemaining ? "Remaining" : "Elapsed";
     }
