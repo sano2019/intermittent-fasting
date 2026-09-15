@@ -266,3 +266,9 @@ footer {
 .dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; }
 
 .app > header > p { text-align: center; color: var(--muted-foreground); }
+
+/* History card (LIFE-style) */
+.history-card { background:#f9f7f1; border-radius:14px; padding:1rem; margin-top:1.5rem; border:1px solid var(--border); }
+.history-row { display:grid; grid-template-columns: 2fr 2fr 1fr; gap:1rem; padding:0.5rem 0; border-bottom:1px solid #eceae3; font-size:0.95rem; }
+.history-row .time { color:#8a857b; font-size:0.8rem; }
+.history-row .dur { font-weight:600; color:#3d3b37; justify-self:end; }

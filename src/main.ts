@@ -1,8 +1,8 @@
 import { FastingPattern } from "./types";
 import { loadLang, t } from "./i18n";
-import { LocalStorageAdapter } from "./storage/local";
+import { SqliteStorageAdapter } from "./storage/local";
 
-(window as any).adapter = new LocalStorageAdapter();
+(window as any).adapter = new SqliteStorageAdapter();
 
 // Load user language preference synchronously from profile
 (window as any).adapter?.loadProfile().then((p: any) => {
