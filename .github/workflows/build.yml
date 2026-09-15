@@ -1,14 +1,44 @@
-name: Build and deploy
+name: Deploy Vite React TS Site
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+  schedule:
+    - cron: "0 14 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: node ./node_modules/vite/bin/vite.js build
-      - uses: actions/deploy-pages@v4
+      - name: Checkout Code
+        uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: "npm"
+      - name: Install Project Dependencies
+        run: npm ci
+      - name: Compile and Bundle Site Build
+        run: node ./node_modules/vite/bin/vite.js build
+      - name: Upload Static Build Artifacts
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+      - name: Deploy Live to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
