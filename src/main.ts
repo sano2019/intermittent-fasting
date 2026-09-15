@@ -80,10 +80,10 @@ export function renderApp(): HTMLElement {
     <div id="delete-confirm-modal" class="fast-history-modal" style="display:none; z-index:60;">
       <div class="modal-inner" style="text-align:center; padding:2rem;">
         <h3 class="label">Delete this fast?</h3>
-        <p style="margin:0.5rem 0 1rem; color:var(--muted-foreground); font-size:0.95rem;">This cannot be undone.</p>
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <button onclick="document.getElementById('delete-confirm-modal').style.display='none'; window.deleteConfirmId=null;" style="padding:6px 16px; background:var(--border); border:1px solid var(--border); border-radius:6px; cursor:pointer;">Cancel</button>
-          <button onclick="deleteConfirm()" style="padding:6px 16px; background:var(--accent); color:#3d3b37; border:none; border-radius:6px; cursor:pointer;">Delete</button>
+        <p class="label-delete-note">This cannot be undone.</p>
+        <div class="delete-btn-row">
+          <button onclick="document.getElementById('delete-confirm-modal').style.display='none'; window.deleteConfirmId=null;" class="delete-btn-cancel">Cancel</button>
+          <button onclick="deleteConfirm()" class="delete-btn-confirm">Delete</button>
         </div>
       </div>
     </div>
@@ -91,12 +91,12 @@ export function renderApp(): HTMLElement {
       <div class="modal-inner">
         <h3>Previous Fasts</h3>
         <div id="history-list"></div>
-        <div class="history-pag" style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+        <div class="history-pag">
           <button id="pag-prev" onclick="window.historyPage = Math.max(1,(window.historyPage||1)-1); openFastHistory();" class="btn-secondary">&lt;</button>
-          <span style="font-size:11px;color:var(--muted-foreground);">page <span id="history-page-num">1</span> / <span id="history-total-pages">1</span></span>
+          <span class="history-pag-num">page <span id="history-page-num">1</span> / <span id="history-total-pages">1</span></span>
           <button id="pag-next" onclick="window.historyPage = Math.min(99,(window.historyPage||1)+1); openFastHistory();" class="btn-secondary">&gt;</button>
         </div>
-        <button onclick="var el=document.getElementById('fast-history-modal'); if(el) el.style.display='none';" style="margin-top:12px;padding:6px 14px;background:var(--border);border:none;border-radius:6px;cursor:pointer;">Close</button>
+        <button onclick="var el=document.getElementById('fast-history-modal'); if(el) el.style.display='none';" class="history-close-btn">Close</button>
       </div>
     </div>
   `;
