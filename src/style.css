@@ -272,3 +272,9 @@ footer {
 .history-row { display:grid; grid-template-columns: 2fr 2fr 1fr; gap:1rem; padding:0.5rem 0; border-bottom:1px solid #eceae3; font-size:0.95rem; }
 .history-row .time { color:#8a857b; font-size:0.8rem; }
 .history-row .dur { font-weight:600; color:#3d3b37; justify-self:end; }
+
+#history-card { margin-top: 2rem; padding: 1rem; border: 1px solid var(--border); border-radius: 8px; }
+#history-card h2 { font-size: 1rem; color: var(--accent); }
+
+.fast-history-modal { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:50; }
+.fast-history-modal .modal-inner { background:var(--card); padding:1.5rem; border-radius:12px; max-width:420px; width:92vw; box-shadow:0 16px 40px rgba(0,0,0,0.25); border:1px solid var(--border); }

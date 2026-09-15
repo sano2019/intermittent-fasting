@@ -1,0 +1,1 @@
+FastRecord, StorageAdapter, LocalStorageAdapter, pagination 7/page, Pattern (16:8/OMAD), loadProfile (future account/OAuth).

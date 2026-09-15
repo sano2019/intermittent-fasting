@@ -1,8 +1,8 @@
 import { FastingPattern } from "./types";
 import { loadLang, t } from "./i18n";
-import { SqliteStorageAdapter } from "./storage/local";
+import { LocalStorageAdapter } from "./storage/local";
 
-(window as any).adapter = new SqliteStorageAdapter();
+(window as any).adapter = new LocalStorageAdapter();
 
 // Load user language preference synchronously from profile
 (window as any).adapter?.loadProfile().then((p: any) => {
@@ -70,6 +70,19 @@ export function renderApp(): HTMLElement {
     <footer>
       ${t("footer.note")}
     </footer>
+
+    <div id="fast-history-modal" class="fast-history-modal" style="display:none;">
+      <div class="modal-inner">
+        <h3>Previous Fasts</h3>
+        <div id="history-list"></div>
+        <div class="history-pag" style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+          <button onclick="(window as any).historyPage = Math.max(0,(window.historyPage||1)-1); openFastHistory();" class="btn-secondary">&lt;</button>
+          <span style="font-size:11px;color:var(--muted-foreground);">page <span id="history-page-num">1</span></span>
+          <button onclick="(window as any).historyPage = ((window.historyPage||1)+1); openFastHistory();" class="btn-secondary">&gt;</button>
+        </div>
+        <button onclick="var el=document.getElementById('fast-history-modal'); if(el) el.style.display='none';" style="margin-top:12px;padding:6px 14px;background:var(--border);border:none;border-radius:6px;cursor:pointer;">Close</button>
+      </div>
+    </div>
   `;
 
   // Profile link navigation
@@ -243,5 +256,11 @@ function renderWeeklyStats(app: HTMLElement) {
     <p class="review-stat">${t("review.completed", { count: 3, total: 7 })}</p>
     <p class="review-stat">${t("review.streak", { days: 2 })}</p>
     <p class="small review-note">${t("review.note")}</p>
+    <button onclick="openFastHistory()" class="btn-secondary">Previous Fasts</button>
   `;
 }
+
+function fmtMs(ms: number) { const h = Math.round(ms / 3600000); const m = Math.round((ms % 3600000) / 60000); return h + ' hrs, ' + m + ' mins'; }
+function openFastHistory() { const m = document.getElementById('fast-history-modal'); if (m) { m.style.display = 'flex'; adapter.loadAll().then((recs: any[]) => { const list = document.getElementById('history-list'); if (list) list.innerHTML = (recs || []).slice(0,7).map((r: any) => `<div style="padding:6px 0;border-bottom:1px solid #eae8e0"><strong>${r.pattern || '-'}</strong> — ${r.startTime?.slice(0,10) || '-'} → ${r.endTime?.slice(0,10) || '-'} | ${r.durationMs ? fmtMs(r.durationMs) : '-'} | ${r.completed === true ? 'done' : r.completed === false ? 'missed' : '-'}</div>`).join('') || '<div style="color:#8a8780;padding:12px 0">No records yet</div>'; }); } else alert('History modal not found'); }
+(window as any).openFastHistory = openFastHistory;
+function syncToCloud() { alert('Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope.'); }

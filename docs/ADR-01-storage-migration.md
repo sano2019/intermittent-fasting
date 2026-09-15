@@ -1,0 +1,2 @@
+# ADR: SQLite Adapter + Migration Path + OAuth Future
+Status: accepted (localStorage active; SQLite adapter server-side stub; OAuth future). Adapter = data-layer; auth/OAuth = separate service layer (future). Migration: user creates account > 'Sync to cloud' > adapter.loadAll() -> SQLite with userId.

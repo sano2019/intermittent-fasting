@@ -1,6 +1,6 @@
 import type { StorageAdapter, FastingEntry, Profile } from "./types";
 
-const STORAGE_KEY = "if_local_entries";
+const STORAGE_KEY = "fast-records-v1";
 
 export class LocalStorageAdapter implements StorageAdapter {
   private async getEntries(): Promise<FastingEntry[]> {
