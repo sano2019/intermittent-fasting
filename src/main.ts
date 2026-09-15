@@ -80,7 +80,7 @@ export function renderApp(): HTMLElement {
         <p style="margin:0.5rem 0 1rem; color:var(--muted-foreground); font-size:0.95rem;">This cannot be undone.</p>
         <div style="display:flex; gap:12px; justify-content:center;">
           <button onclick="document.getElementById('delete-confirm-modal').style.display='none'; window.deleteConfirmId=null;" style="padding:6px 16px; background:var(--border); border:1px solid var(--border); border-radius:6px; cursor:pointer;">Cancel</button>
-          <button onclick="const id=window.deleteConfirmId; if(id){ const arr=JSON.parse(window.localStorage.getItem('fast-records-v1')||'[]'); const filtered=arr.filter((r:any)=>r.id!==id); window.localStorage.setItem('fast-records-v1',JSON.stringify(filtered)); window.deleteConfirmId=null; document.getElementById('delete-confirm-modal').style.display='none'; openFastHistory(); }" style="padding:6px 16px; background:var(--accent); color:#3d3b37; border:none; border-radius:6px; cursor:pointer;">Delete</button>
+          <button onclick='const id=window.deleteConfirmId; if(id){ const arr=JSON.parse(window.localStorage.getItem("fast-records-v1")||"[]"); const filtered=arr.filter((r:any)=>r.id!==id); window.localStorage.setItem("fast-records-v1",JSON.stringify(filtered)); window.deleteConfirmId=null; document.getElementById("delete-confirm-modal").style.display="none"; openFastHistory(); }' style="padding:6px 16px; background:var(--accent); color:#3d3b37; border:none; border-radius:6px; cursor:pointer;">Delete</button>
         </div>
       </div>
     </div>
