@@ -50,6 +50,8 @@
   "status.done": "klaar",
   "status.missed": "gemist",
   "action.close": "Sluiten",
+  "history.button": "Vorige vasten",
+  "history.title": "Vorige vasten",
   "profile.saved": "Opgeslagen",
   "tracking.fast": "Vasten"
 }
