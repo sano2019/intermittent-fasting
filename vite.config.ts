@@ -1,9 +1,14 @@
 import { defineConfig } from "vite";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 
+// https://vite.dev/config/
 export default defineConfig({
-  root: ".",
-  build: { outDir: "dist" },
-  plugins: [basicSsl()],
-  server: { port: 5173, open: false, https: true, host: true, allowedHosts: [".local", "192.168.1.100"] },
+  base: "./",
+  plugins: [
+    basicSsl(), // Automatically creates and caches local self-signed certificates
+  ],
+  server: {
+    https: true, // Forces the local dev server to listen on https://
+    port: 5173, // Keeps your standard port
+  },
 });
