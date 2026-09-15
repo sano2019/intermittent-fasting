@@ -45,5 +45,13 @@
   "tracking.fast": "Fasting timer",
   "tracking.start": "Window started",
   "tracking.end": "Window complete",
-  "timer.override": "Start from now"
+  "timer.override": "Start from now",
+  "history.button": "Previous Fasts",
+  "history.title": "Previous Fasts",
+  "history.modal.notfound": "History modal not found",
+  "delete.confirm": "Delete this fast?",
+  "delete.note": "This cannot be undone.",
+  "delete.cancel": "Cancel",
+  "delete.confirm_btn": "Delete",
+  "sync.alert": "Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope."
 }

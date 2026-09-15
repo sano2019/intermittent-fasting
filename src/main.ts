@@ -79,17 +79,17 @@ export function renderApp(): HTMLElement {
 
     <div id="delete-confirm-modal" class="fast-history-modal" style="display:none; z-index:60;">
       <div class="modal-inner" style="text-align:center; padding:2rem;">
-        <h3 class="label">Delete this fast?</h3>
-        <p class="label-delete-note">This cannot be undone.</p>
+        <h3 class="label">${t("delete.confirm")}</h3>
+        <p class="label-delete-note">${t("delete.note")}</p>
         <div class="delete-btn-row">
-          <button onclick="document.getElementById('delete-confirm-modal').style.display='none'; window.deleteConfirmId=null;" class="delete-btn-cancel">Cancel</button>
-          <button onclick="deleteConfirm()" class="delete-btn-confirm">Delete</button>
+          <button onclick="document.getElementById('delete-confirm-modal').style.display='none'; window.deleteConfirmId=null;" class="delete-btn-cancel">${t("delete.cancel")}</button>
+          <button onclick="deleteConfirm()" class="delete-btn-confirm">${t("delete.confirm_btn")}</button>
         </div>
       </div>
     </div>
     <div id="fast-history-modal" class="fast-history-modal" style="display:none;">
       <div class="modal-inner">
-        <h3>Previous Fasts</h3>
+        <h3>${t("history.title")}</h3>
         <div id="history-list"></div>
         <div class="history-pag">
           <button id="pag-prev" onclick="window.historyPage = Math.max(1,(window.historyPage||1)-1); openFastHistory();" class="btn-secondary">&lt;</button>
@@ -357,7 +357,7 @@ function renderWeeklyStats(app: HTMLElement) {
     <p class="review-stat">${t("review.streak", { days: streak })}</p>
     <p class="small review-note" style="text-align:center">Calm reviews, No penalties</p>
     <div style="display:flex;justify-content:center;margin-top:8px;">
-      <button onclick="openFastHistory()" class="btn-secondary">Previous Fasts</button>
+      <button onclick="openFastHistory()" class="btn-secondary">${t("history.button")}</button>
     </div>
   `;
 }
