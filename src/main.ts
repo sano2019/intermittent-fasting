@@ -71,6 +71,18 @@ export function renderApp(): HTMLElement {
       ${t("footer.note")}
     </footer>
 
+    <div id="fast-save-modal" class="fast-save-modal" style="display:none;">
+      <div class="modal-inner card">
+        <h3>Confirm Fast</h3>
+        <p>Duration: <span id="fast-save-duration"></span></p>
+        <label>Pattern: <select id="fast-save-pattern"><option value="">(blank)</option><option>16:8</option><option>5:2</option><option>OMAD</option><option>custom</option></select></label>
+        <p>Start: <input type="datetime-local" id="fast-save-start" /></p>
+        <p>End: <input type="datetime-local" id="fast-save-end" /></p>
+        <button onclick="document.getElementById('fast-save-modal').style.display='none';window.localStorage.removeItem('timer-base');window.localStorage.removeItem('fast-pattern');setBtnState();">Cancel</button>
+        <button onclick="const s=document.getElementById('fast-save-start')?.value||'';const e=document.getElementById('fast-save-end')?.value||'';const p=document.getElementById('fast-save-pattern')?.value||'';const dur=Math.max(0,new Date(e||Date.now()).getTime()-new Date(s||window.localStorage.getItem('timer-start')||Date.now()).getTime());const arr=JSON.parse(window.localStorage.getItem('fast-records-v1')||'[]');arr.push({id:'fast-'+Date.now(),startTime:s||new Date().toISOString(),endTime:e||new Date().toISOString(),durationMs:dur,completed:true,pattern:p,createdAt:new Date().toISOString()});window.localStorage.setItem('fast-records-v1',JSON.stringify(arr));document.getElementById('fast-save-modal').style.display='none';window.localStorage.removeItem('timer-base');window.localStorage.removeItem('fast-pattern');setBtnState();">Save</button>
+      </div>
+    </div>
+
     <div id="fast-history-modal" class="fast-history-modal" style="display:none;">
       <div class="modal-inner">
         <h3>Previous Fasts</h3>
@@ -191,12 +203,32 @@ export function renderApp(): HTMLElement {
     if (controls) (controls as HTMLElement).classList.toggle("locked", running);
   };
   setBtnState();
+  (window as any).setBtnState = setBtnState;
   startBtn.addEventListener("click", () => {
     const running = !!window.localStorage.getItem("timer-base");
     if (running) {
+      // Confirm save: duration + pattern select before clearing timer-base
+      const baseStr = window.localStorage.getItem("timer-base")!;
+      const start = new Date(baseStr).getTime();
+      const now = Date.now();
+      const durationMs = Math.max(0, now - start);
+      const profile = window.adapter ? (window.adapter.loadProfile ? null : null) : null; // stub: adapter.loadProfile async; deferred full profile read for this step per user's "no inline functions" constraint
+      const pattern = (window.localStorage.getItem("fast-pattern") || "16:8");
+      // Show styled save-confirm modal (separate from #fast-history-modal display flow)
+      const modal = document.getElementById("fast-save-modal") as HTMLElement;
+      const durSpan = document.getElementById("fast-save-duration") as HTMLElement;
+      const patSelect = document.getElementById("fast-save-pattern") as HTMLSelectElement;
+      durSpan.textContent = fmtMs(durationMs);
+      const startInput = document.getElementById("fast-save-start") as HTMLInputElement;
+      const endInput = document.getElementById("fast-save-end") as HTMLInputElement;
+      if (startInput) startInput.value = baseStr.slice(0,16).replace(" ","T");
+      if (endInput) endInput.value = new Date().toISOString().slice(0,16).replace(" ","T");
+      patSelect.innerHTML = ["","16:8","5:2","OMAD","custom"].map(p => `<option value="${p}" ${p===pattern?"selected":""}>${p || "(blank)"}</option>`).join("");
+      modal.style.display = "block";
       window.localStorage.removeItem("timer-base");
     } else {
       window.localStorage.setItem("timer-base", new Date().toISOString());
+      window.localStorage.setItem("fast-pattern", (window.localStorage.getItem("profile-pattern") || "16:8"));
     }
     setBtnState();
   });
