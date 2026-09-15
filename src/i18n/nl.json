@@ -45,6 +45,11 @@
   "pattern.custom": "Aangepast",
   "pattern.custom.note": "Je eigen ritme",
   "timer.override": "Begin vanaf nu",
+  "unit.hrs": "uur",
+  "unit.mins": "min",
+  "status.done": "klaar",
+  "status.missed": "gemist",
+  "action.close": "Sluiten",
   "profile.saved": "Opgeslagen",
   "tracking.fast": "Vasten"
 }
