@@ -407,11 +407,15 @@ function openFastHistory() {
 (window as any).deleteConfirm = function () {
   const id = window.deleteConfirmId;
   if (!id) return;
+  const adapter: any = (window as any).adapter;
+  if (adapter && adapter.delete) {
+    adapter.delete(id).catch(() => { /* fall back to manual filter */ });
+  }
   const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
   const filtered = arr.filter((r: any) => r.id !== id);
   window.localStorage.setItem("fast-records-v1", JSON.stringify(filtered));
   window.deleteConfirmId = null;
-  document.getElementById("delete-confirm-modal").style.display = "none";
+  document.getElementById("delete-confirm-modal")!.style.display = "none";
   openFastHistory();
 };
 function syncToCloud() {

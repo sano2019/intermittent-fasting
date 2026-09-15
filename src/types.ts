@@ -34,3 +34,11 @@ export interface StorageAdapter {
   saveProfile(profile: Profile): Promise<void>;
   loadProfile(): Promise<Profile | null>;
 }
+
+export const STORAGE_KEYS = {
+  records: "fast-records-v1",
+  profile: "if_local_profile",
+  timerBase: "timer-base",
+  pattern: "profile-pattern",
+  hours: "fast-hours",
+} as const;
