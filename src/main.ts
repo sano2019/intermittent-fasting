@@ -96,7 +96,7 @@ export function renderApp(): HTMLElement {
           <span class="history-pag-num">page <span id="history-page-num">1</span> / <span id="history-total-pages">1</span></span>
           <button id="pag-next" onclick="window.historyPage = Math.min(99,(window.historyPage||1)+1); openFastHistory();" class="btn-secondary">&gt;</button>
         </div>
-        <button onclick="var el=document.getElementById('fast-history-modal'); if(el) el.style.display='none';" class="history-close-btn">Close</button>
+        <button onclick="var el=document.getElementById('fast-history-modal'); if(el) el.style.display='none';" class="history-close-btn">${t("action.close")}</button>
       </div>
     </div>
   `;
@@ -365,7 +365,7 @@ function renderWeeklyStats(app: HTMLElement) {
 function fmtMs(ms: number) {
   const h = Math.round(ms / 3600000);
   const m = Math.round((ms % 3600000) / 60000);
-  return h + " hrs, " + m + " mins";
+  return h + " " + t("unit.hrs") + ", " + m + " " + t("unit.mins");
 }
 function openFastHistory() {
   const page = Math.max(0, (window.historyPage || 1) - 1);
@@ -396,7 +396,7 @@ function openFastHistory() {
             .slice(page * 7, (page + 1) * 7)
             .map(
               (r: any) =>
-                `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || "-"}</strong> — ${r.startTime?.slice(0, 10) || "-"} → ${r.endTime?.slice(0, 10) || "-"} | ${r.durationMs ? fmtMs(r.durationMs) : "-"} | ${r.completed === true ? "done" : r.completed === false ? "missed" : "-"}</div><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div>`,
+                `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || "-"}</strong> — ${r.startTime?.slice(0, 10) || "-"} → ${r.endTime?.slice(0, 10) || "-"} | ${r.durationMs ? fmtMs(r.durationMs) : "-"} | ${r.completed === true ? t("status.done") : r.completed === false ? t("status.missed") : "-"}</div><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div>`,
             )
             .join("") ||
           '<div style="color:#8a8780;padding:12px 0">No records yet</div>';
