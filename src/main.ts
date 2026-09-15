@@ -33,15 +33,6 @@ export function renderApp(): HTMLElement {
       <p>${t("app.subtitle")}</p>
     </header>
 
-    <section class="card">
-      <h2>${t("today.label")}</h2>
-      <div id="today-row" class="checkbox-row">
-        <label for="today-check">${t("today.label")}</label>
-        <input id="today-check" type="checkbox" />
-      </div>
-      <p class="small">${t("today.note")}</p>
-    </section>
-
     <section class="card timer-ring-card" id="timer-card">
       <h2 class="timer-card-title">${t("tracking.fast")}</h2>
       <div class="mode-pills"><button id="mode-elapsed" class="pill active">${t("timer.elapsed")}</button><button id="mode-remaining" class="pill">${t("timer.remaining")}</button></div>
@@ -88,9 +79,9 @@ export function renderApp(): HTMLElement {
         <h3>Previous Fasts</h3>
         <div id="history-list"></div>
         <div class="history-pag" style="display:flex;gap:8px;margin-top:10px;align-items:center;">
-          <button onclick="(window as any).historyPage = Math.max(0,(window.historyPage||1)-1); openFastHistory();" class="btn-secondary">&lt;</button>
-          <span style="font-size:11px;color:var(--muted-foreground);">page <span id="history-page-num">1</span></span>
-          <button onclick="(window as any).historyPage = ((window.historyPage||1)+1); openFastHistory();" class="btn-secondary">&gt;</button>
+          <button id="pag-prev" onclick="window.historyPage = Math.max(1,(window.historyPage||1)-1); openFastHistory();" class="btn-secondary">&lt;</button>
+          <span style="font-size:11px;color:var(--muted-foreground);">page <span id="history-page-num">1</span> / <span id="history-total-pages">1</span></span>
+          <button id="pag-next" onclick="window.historyPage = Math.min(99,(window.historyPage||1)+1); openFastHistory();" class="btn-secondary">&gt;</button>
         </div>
         <button onclick="var el=document.getElementById('fast-history-modal'); if(el) el.style.display='none';" style="margin-top:12px;padding:6px 14px;background:var(--border);border:none;border-radius:6px;cursor:pointer;">Close</button>
       </div>
@@ -106,22 +97,7 @@ export function renderApp(): HTMLElement {
     });
   }
 
-  // Simple interaction hook — keeps function separate from style
-  const todayCheck = app.querySelector<HTMLInputElement>("#today-check")!;
-  todayCheck.addEventListener("change", () => {
-    const completed = todayCheck.checked;
-    todayCheck.parentElement!.classList.toggle("completed", completed);
-    // Persist to test-entries: today (Sat 2026-09-13) = completed true/false/null
-    const todayStr = new Date().toISOString().split("T")[0];
-    const raw = window.localStorage.getItem("test-entries");
-    const entries = raw ? JSON.parse(raw) : [];
-    const idx = entries.findIndex((e: any) => e.date === todayStr);
-    const entry = { date: todayStr, completed: completed ? true : (completed === false ? false : null) };
-    if (idx >= 0) entries[idx] = entry; else entries.push(entry);
-    window.localStorage.setItem("test-entries", JSON.stringify(entries));
-    renderWeeklyStats(app); // refresh dots
-  });
-
+  // Timer start/stop interaction — timer-card handles tracking
   renderWeeklyStats(app);
 
   // Frame-based timer for accuracy (requestAnimationFrame)
@@ -259,40 +235,46 @@ export function renderApp(): HTMLElement {
 
 function renderWeeklyStats(app: HTMLElement) {
   const container = app.querySelector("#weekly-stats")!;
-  const raw = window.localStorage.getItem("test-entries");
+  const raw = window.localStorage.getItem("fast-records-v1") || "[]";
   const entries = raw ? JSON.parse(raw) : [];
+  const now = new Date(); const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - ((now.getDay()+6)%7)); startOfWeek.setHours(0,0,0,0);
   const days = [t("days.mon"),t("days.tue"),t("days.wed"),t("days.thu"),t("days.fri"),t("days.sat"),t("days.sun")];
   // Map weekday index (0=Mon...6=Sun) from entry.date (ISO YYYY-MM-DD)
   const entryByDay: (typeof entries[0] | undefined)[] = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
   entries.forEach((e) => {
-    if (!e || !e.date) return;
-    const d = new Date(e.date + "T00:00:00");
+    if (!e || !(e.startTime || e.endTime)) return;
+    const dStr = (e.startTime || e.endTime || '').slice(0,10);
+    const d = new Date(dStr + "T00:00:00");
+    const entryWeek = new Date(d); entryWeek.setHours(0,0,0,0); entryWeek.setDate(d.getDate() - ((d.getDay()+6)%7));
+    if (entryWeek.getTime() !== startOfWeek.getTime()) return;
     const wd = d.getDay(); // 0=Sun ... 6=Sat; remap
     const idx = wd === 0 ? 6 : wd - 1; // Sun(0)->6, Mon(1)->0 ... Sat(6)->5
     entryByDay[idx] = e;
   });
+  const completedCount = entryByDay.filter((e) => e && (e.durationMs || 0) > 0).length;
+  const missedCount = entryByDay.filter((e) => e && e.startTime && !(e.durationMs || 0)).length;
+  const streak = (() => { let s=0; for(let i=entryByDay.length-1;i>=0&&entryByDay[i]&&(entryByDay[i]!.durationMs||0)>0;i--) s++; return s; })();
   container.innerHTML = `
         <div class="weekly-row">
       ${[0,1,2,3,4,5,6].map(i => {
         const d = days[i];
         const entry = entryByDay[i];
-        let cls = "indicator";
-        if (entry) {
-          if (entry.completed === true) cls = "active";
-          else if (entry.completed === false && entry.completed !== null) cls = "missed";
-        }
+        let cls = "dot";
+        if (entry && (entry.durationMs || 0) > 0) cls = "dot active"; else if (entry && entry.startTime && !(entry.durationMs || 0)) cls = "dot missed";
         const labelText = d.length > 3 ? d.substring(0, 3) : d;
         return `<div class="week-day"><span class="dot ${cls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
       }).join("")}
     </div>
-    <p class="review-stat">${t("review.completed", { count: 3, total: 7 })}</p>
-    <p class="review-stat">${t("review.streak", { days: 2 })}</p>
-    <p class="small review-note">${t("review.note")}</p>
-    <button onclick="openFastHistory()" class="btn-secondary">Previous Fasts</button>
+    <p class="review-stat">${t("review.completed", { count: completedCount, total: 7 })}</p>
+    <p class="review-stat">${t("review.streak", { days: streak })}</p>
+    <p class="small review-note" style="text-align:center">Calm reviews, No penalties</p>
+    <div style="display:flex;justify-content:center;margin-top:8px;">
+      <button onclick="openFastHistory()" class="btn-secondary">Previous Fasts</button>
+    </div>
   `;
 }
 
 function fmtMs(ms: number) { const h = Math.round(ms / 3600000); const m = Math.round((ms % 3600000) / 60000); return h + ' hrs, ' + m + ' mins'; }
-function openFastHistory() { const m = document.getElementById('fast-history-modal'); if (m) { m.style.display = 'flex'; adapter.loadAll().then((recs: any[]) => { const list = document.getElementById('history-list'); if (list) list.innerHTML = (recs || []).slice(0,7).map((r: any) => `<div style="padding:6px 0;border-bottom:1px solid #eae8e0"><strong>${r.pattern || '-'}</strong> — ${r.startTime?.slice(0,10) || '-'} → ${r.endTime?.slice(0,10) || '-'} | ${r.durationMs ? fmtMs(r.durationMs) : '-'} | ${r.completed === true ? 'done' : r.completed === false ? 'missed' : '-'}</div>`).join('') || '<div style="color:#8a8780;padding:12px 0">No records yet</div>'; }); } else alert('History modal not found'); }
+function openFastHistory() { const page = Math.max(0,(window.historyPage||1)-1); const m = document.getElementById('fast-history-modal'); if (m) { m.style.display = 'flex'; (window as any).adapter.loadAll().then((recs: any[]) => { const list = document.getElementById('history-list'); const totalPages = Math.max(1,Math.ceil(((recs||[]) as any[]).length/7)); const totalSpan = document.getElementById('history-total-pages'); if (totalSpan) totalSpan.textContent = String(totalPages); const prevBtn = document.getElementById('pag-prev') as HTMLElement|null; const nextBtn = document.getElementById('pag-next') as HTMLElement|null; if (prevBtn) prevBtn.style.display = page <= 0 ? 'none' : 'inline-block'; if (nextBtn) nextBtn.style.display = page >= totalPages-1 ? 'none' : 'inline-block'; const pageNum = document.getElementById('history-page-num'); if (pageNum) pageNum.textContent = String(window.historyPage||1); if (list) list.innerHTML = (recs || []).slice(page*7,(page+1)*7).map((r: any) => `<div style="padding:6px 0;border-bottom:1px solid #eae8e0"><strong>${r.pattern || '-'}</strong> — ${r.startTime?.slice(0,10) || '-'} → ${r.endTime?.slice(0,10) || '-'} | ${r.durationMs ? fmtMs(r.durationMs) : '-'} | ${r.completed === true ? 'done' : r.completed === false ? 'missed' : '-'}</div>`).join('') || '<div style="color:#8a8780;padding:12px 0">No records yet</div>'; }); } else alert('History modal not found'); }
 (window as any).openFastHistory = openFastHistory;
 function syncToCloud() { alert('Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope.'); }
