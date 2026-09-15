@@ -5,13 +5,16 @@ import { LocalStorageAdapter } from "./storage/local";
 (window as any).adapter = new LocalStorageAdapter();
 
 // Load user language preference synchronously from profile
-(window as any).adapter?.loadProfile().then((p: any) => {
-  loadLang(p?.lang || "en");
-  renderApp();  // re-render after language loaded
-}).catch(() => {
-  loadLang("en");
-  renderApp();
-});
+(window as any).adapter
+  ?.loadProfile()
+  .then((p: any) => {
+    loadLang(p?.lang || "en");
+    renderApp(); // re-render after language loaded
+  })
+  .catch(() => {
+    loadLang("en");
+    renderApp();
+  });
 
 const patterns: { key: FastingPattern; label: string; note: string }[] = [
   { key: "16:8", label: "16:8", note: "16h fast / 8h window" },
@@ -80,7 +83,7 @@ export function renderApp(): HTMLElement {
         <p style="margin:0.5rem 0 1rem; color:var(--muted-foreground); font-size:0.95rem;">This cannot be undone.</p>
         <div style="display:flex; gap:12px; justify-content:center;">
           <button onclick="document.getElementById('delete-confirm-modal').style.display='none'; window.deleteConfirmId=null;" style="padding:6px 16px; background:var(--border); border:1px solid var(--border); border-radius:6px; cursor:pointer;">Cancel</button>
-          <button onclick='const id=window.deleteConfirmId; if(id){ const arr=JSON.parse(window.localStorage.getItem("fast-records-v1")||"[]"); const filtered=arr.filter((r:any)=>r.id!==id); window.localStorage.setItem("fast-records-v1",JSON.stringify(filtered)); window.deleteConfirmId=null; document.getElementById("delete-confirm-modal").style.display="none"; openFastHistory(); }' style="padding:6px 16px; background:var(--accent); color:#3d3b37; border:none; border-radius:6px; cursor:pointer;">Delete</button>
+          <button onclick="deleteConfirm()" style="padding:6px 16px; background:var(--accent); color:#3d3b37; border:none; border-radius:6px; cursor:pointer;">Delete</button>
         </div>
       </div>
     </div>
@@ -118,19 +121,26 @@ export function renderApp(): HTMLElement {
     const profileRaw = window.localStorage.getItem("profile");
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
     // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
-    const eatingEndStr = savedProfile?.endTime ? (() => {
-      const [h, m] = savedProfile.endTime.split(":").map(Number);
-      const d = new Date();
-      d.setHours(h, m, 0, 0);
-      // Offset UTC by -7h for Vietnam local interpretation (stored as UTC base)
-      const utcMs = d.getTime() - 7 * 3600000;
-      return new Date(utcMs).toISOString();
-    })() : null;
-    const baseStr = window.localStorage.getItem("timer-base") || eatingEndStr || new Date().toISOString();
+    const eatingEndStr = savedProfile?.endTime
+      ? (() => {
+          const [h, m] = savedProfile.endTime.split(":").map(Number);
+          const d = new Date();
+          d.setHours(h, m, 0, 0);
+          // Offset UTC by -7h for Vietnam local interpretation (stored as UTC base)
+          const utcMs = d.getTime() - 7 * 3600000;
+          return new Date(utcMs).toISOString();
+        })()
+      : null;
+    const baseStr =
+      window.localStorage.getItem("timer-base") ||
+      eatingEndStr ||
+      new Date().toISOString();
     // Read pattern once (already read above at line 90-92; re-use savedProfile)
-    const savedPattern = savedProfile?.pattern as string || "custom";
+    const savedPattern = (savedProfile?.pattern as string) || "custom";
     // For 16:8: fast window = 16h (counted from eating end); feed window = 8h
-    const savedHours = window.localStorage.getItem("fast-hours") ? parseInt(window.localStorage.getItem("fast-hours")!, 10) : 16;
+    const savedHours = window.localStorage.getItem("fast-hours")
+      ? parseInt(window.localStorage.getItem("fast-hours")!, 10)
+      : 16;
     const FAST_WINDOW_H = savedHours;
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
@@ -151,11 +161,13 @@ export function renderApp(): HTMLElement {
     const lblFast = document.getElementById("timer-label-text");
     if (lblFast) lblFast.textContent = showRemaining ? "Remaining" : "Elapsed";
     // Progress ring: fill based on elapsed / 24h (full circle = 24h)
-    const progressEl = document.getElementById("fast-progress") as SVGCircleElement | null;
+    const progressEl = document.getElementById(
+      "fast-progress",
+    ) as SVGCircleElement | null;
     if (progressEl) {
       const totalMs = 24 * 3600000; // ring = 24 hours
       const pct = Math.min(1, Math.max(0, elapsedMs / totalMs));
-      const dashOffset = 502.65 - (502.65 * pct); // circumference of r=80 circle ~2*pi*80 ≈ 502.65
+      const dashOffset = 502.65 - 502.65 * pct; // circumference of r=80 circle ~2*pi*80 ≈ 502.65
       progressEl.style.strokeDashoffset = String(dashOffset);
     }
     animFrame = requestAnimationFrame(updateTimer);
@@ -169,14 +181,16 @@ export function renderApp(): HTMLElement {
     const current = raw ? parseInt(raw, 10) : 16;
     const updated = Math.min(24, current + 1);
     window.localStorage.setItem("fast-hours", String(updated));
-    document.querySelector(".timer-window")!.textContent = `${updated} ${t("timer.unit")}`;
+    document.querySelector(".timer-window")!.textContent =
+      `${updated} ${t("timer.unit")}`;
   });
   document.getElementById("timer-minus")?.addEventListener("click", () => {
     const raw = window.localStorage.getItem("fast-hours");
     const current = raw ? parseInt(raw, 10) : 16;
     const updated = Math.max(4, current - 1);
     window.localStorage.setItem("fast-hours", String(updated));
-    document.querySelector(".timer-window")!.textContent = `${updated} ${t("timer.unit")}`;
+    document.querySelector(".timer-window")!.textContent =
+      `${updated} ${t("timer.unit")}`;
   });
 
   // Start / Stop fast toggle
@@ -198,23 +212,47 @@ export function renderApp(): HTMLElement {
       const start = new Date(baseStr).getTime();
       const now = Date.now();
       const durationMs = Math.max(0, now - start);
-      const profile = window.adapter ? (window.adapter.loadProfile ? null : null) : null; // stub: adapter.loadProfile async; deferred full profile read for this step per user's "no inline functions" constraint
-      const pattern = (window.localStorage.getItem("fast-pattern") || "16:8");
+      const profile = window.adapter
+        ? window.adapter.loadProfile
+          ? null
+          : null
+        : null; // stub: adapter.loadProfile async; deferred full profile read for this step per user's "no inline functions" constraint
+      const pattern = window.localStorage.getItem("fast-pattern") || "16:8";
       // Show styled save-confirm modal (separate from #fast-history-modal display flow)
       const modal = document.getElementById("fast-save-modal") as HTMLElement;
-      const durSpan = document.getElementById("fast-save-duration") as HTMLElement;
-      const patSelect = document.getElementById("fast-save-pattern") as HTMLSelectElement;
+      const durSpan = document.getElementById(
+        "fast-save-duration",
+      ) as HTMLElement;
+      const patSelect = document.getElementById(
+        "fast-save-pattern",
+      ) as HTMLSelectElement;
       durSpan.textContent = fmtMs(durationMs);
-      const startInput = document.getElementById("fast-save-start") as HTMLInputElement;
-      const endInput = document.getElementById("fast-save-end") as HTMLInputElement;
-      if (startInput) startInput.value = baseStr.slice(0,16).replace(" ","T");
-      if (endInput) endInput.value = new Date().toISOString().slice(0,16).replace(" ","T");
-      patSelect.innerHTML = ["","16:8","5:2","OMAD","custom"].map(p => `<option value="${p}" ${p===pattern?"selected":""}>${p || "(blank)"}</option>`).join("");
+      const startInput = document.getElementById(
+        "fast-save-start",
+      ) as HTMLInputElement;
+      const endInput = document.getElementById(
+        "fast-save-end",
+      ) as HTMLInputElement;
+      if (startInput) startInput.value = baseStr.slice(0, 16).replace(" ", "T");
+      if (endInput)
+        endInput.value = new Date()
+          .toISOString()
+          .slice(0, 16)
+          .replace(" ", "T");
+      patSelect.innerHTML = ["", "16:8", "5:2", "OMAD", "custom"]
+        .map(
+          (p) =>
+            `<option value="${p}" ${p === pattern ? "selected" : ""}>${p || "(blank)"}</option>`,
+        )
+        .join("");
       modal.style.display = "block";
       window.localStorage.removeItem("timer-base");
     } else {
       window.localStorage.setItem("timer-base", new Date().toISOString());
-      window.localStorage.setItem("fast-pattern", (window.localStorage.getItem("profile-pattern") || "16:8"));
+      window.localStorage.setItem(
+        "fast-pattern",
+        window.localStorage.getItem("profile-pattern") || "16:8",
+      );
     }
     setBtnState();
   });
@@ -224,14 +262,16 @@ export function renderApp(): HTMLElement {
   document.getElementById("mode-elapsed")?.addEventListener("click", () => {
     showRemaining = false;
     document.getElementById("mode-elapsed")!.textContent = t("timer.elapsed");
-    document.getElementById("mode-remaining")!.textContent = t("timer.remaining");
+    document.getElementById("mode-remaining")!.textContent =
+      t("timer.remaining");
     document.getElementById("mode-elapsed")!.classList.add("active");
     document.getElementById("mode-remaining")!.classList.remove("active");
   });
   document.getElementById("mode-remaining")?.addEventListener("click", () => {
     showRemaining = true;
     document.getElementById("mode-elapsed")!.textContent = t("timer.elapsed");
-    document.getElementById("mode-remaining")!.textContent = t("timer.remaining");
+    document.getElementById("mode-remaining")!.textContent =
+      t("timer.remaining");
     document.getElementById("mode-remaining")!.classList.add("active");
     document.getElementById("mode-elapsed")!.classList.remove("active");
   });
@@ -247,33 +287,71 @@ function renderWeeklyStats(app: HTMLElement) {
   const container = app.querySelector("#weekly-stats")!;
   const raw = window.localStorage.getItem("fast-records-v1") || "[]";
   const entries = raw ? JSON.parse(raw) : [];
-  const now = new Date(); const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - ((now.getDay()+6)%7)); startOfWeek.setHours(0,0,0,0);
-  const days = [t("days.mon"),t("days.tue"),t("days.wed"),t("days.thu"),t("days.fri"),t("days.sat"),t("days.sun")];
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  startOfWeek.setHours(0, 0, 0, 0);
+  const days = [
+    t("days.mon"),
+    t("days.tue"),
+    t("days.wed"),
+    t("days.thu"),
+    t("days.fri"),
+    t("days.sat"),
+    t("days.sun"),
+  ];
   // Map weekday index (0=Mon...6=Sun) from entry.date (ISO YYYY-MM-DD)
-  const entryByDay: (typeof entries[0] | undefined)[] = [undefined, undefined, undefined, undefined, undefined, undefined, undefined];
+  const entryByDay: ((typeof entries)[0] | undefined)[] = [
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  ];
   entries.forEach((e) => {
     if (!e || !(e.startTime || e.endTime)) return;
-    const dStr = (e.startTime || e.endTime || '').slice(0,10);
+    const dStr = (e.startTime || e.endTime || "").slice(0, 10);
     const d = new Date(dStr + "T00:00:00");
-    const entryWeek = new Date(d); entryWeek.setHours(0,0,0,0); entryWeek.setDate(d.getDate() - ((d.getDay()+6)%7));
+    const entryWeek = new Date(d);
+    entryWeek.setHours(0, 0, 0, 0);
+    entryWeek.setDate(d.getDate() - ((d.getDay() + 6) % 7));
     if (entryWeek.getTime() !== startOfWeek.getTime()) return;
     const wd = d.getDay(); // 0=Sun ... 6=Sat; remap
     const idx = wd === 0 ? 6 : wd - 1; // Sun(0)->6, Mon(1)->0 ... Sat(6)->5
     entryByDay[idx] = e;
   });
-  const completedCount = entryByDay.filter((e) => e && (e.durationMs || 0) > 0).length;
-  const missedCount = entryByDay.filter((e) => e && e.startTime && !(e.durationMs || 0)).length;
-  const streak = (() => { let s=0; for(let i=entryByDay.length-1;i>=0&&entryByDay[i]&&(entryByDay[i]!.durationMs||0)>0;i--) s++; return s; })();
+  const completedCount = entryByDay.filter(
+    (e) => e && (e.durationMs || 0) > 0,
+  ).length;
+  const missedCount = entryByDay.filter(
+    (e) => e && e.startTime && !(e.durationMs || 0),
+  ).length;
+  const streak = (() => {
+    let s = 0;
+    for (
+      let i = entryByDay.length - 1;
+      i >= 0 && entryByDay[i] && (entryByDay[i]!.durationMs || 0) > 0;
+      i--
+    )
+      s++;
+    return s;
+  })();
   container.innerHTML = `
         <div class="weekly-row">
-      ${[0,1,2,3,4,5,6].map(i => {
-        const d = days[i];
-        const entry = entryByDay[i];
-        let cls = "dot";
-        if (entry && (entry.durationMs || 0) > 0) cls = "dot active"; else if (entry && entry.startTime && !(entry.durationMs || 0)) cls = "dot missed";
-        const labelText = d.length > 3 ? d.substring(0, 3) : d;
-        return `<div class="week-day"><span class="dot ${cls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
-      }).join("")}
+      ${[0, 1, 2, 3, 4, 5, 6]
+        .map((i) => {
+          const d = days[i];
+          const entry = entryByDay[i];
+          let cls = "dot";
+          if (entry && (entry.durationMs || 0) > 0) cls = "dot active";
+          else if (entry && entry.startTime && !(entry.durationMs || 0))
+            cls = "dot missed";
+          const labelText = d.length > 3 ? d.substring(0, 3) : d;
+          return `<div class="week-day"><span class="dot ${cls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
+        })
+        .join("")}
     </div>
     <p class="review-stat">${t("review.completed", { count: completedCount, total: 7 })}</p>
     <p class="review-stat">${t("review.streak", { days: streak })}</p>
@@ -284,7 +362,60 @@ function renderWeeklyStats(app: HTMLElement) {
   `;
 }
 
-function fmtMs(ms: number) { const h = Math.round(ms / 3600000); const m = Math.round((ms % 3600000) / 60000); return h + ' hrs, ' + m + ' mins'; }
-function openFastHistory() { const page = Math.max(0,(window.historyPage||1)-1); const m = document.getElementById('fast-history-modal'); if (m) { m.style.display = 'flex'; (window as any).adapter.loadAll().then((recs: any[]) => { const sorted = (recs||[]).sort((a,b)=>new Date(b.startTime||b.endTime||0).getTime()-new Date(a.startTime||a.endTime||0).getTime()); const list = document.getElementById('history-list'); const totalPages = Math.max(1,Math.ceil(sorted.length/7)); const totalSpan = document.getElementById('history-total-pages'); if (totalSpan) totalSpan.textContent = String(totalPages); const prevBtn = document.getElementById('pag-prev') as HTMLElement|null; const nextBtn = document.getElementById('pag-next') as HTMLElement|null; if (prevBtn) prevBtn.style.display = page <= 0 ? 'none' : 'inline-block'; if (nextBtn) nextBtn.style.display = page >= totalPages-1 ? 'none' : 'inline-block'; const pageNum = document.getElementById('history-page-num'); if (pageNum) pageNum.textContent = String(window.historyPage||1); if (list) list.innerHTML = sorted.slice(page*7,(page+1)*7).map((r: any) => `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || '-'}</strong> — ${r.startTime?.slice(0,10) || '-'} → ${r.endTime?.slice(0,10) || '-'} | ${r.durationMs ? fmtMs(r.durationMs) : '-'} | ${r.completed === true ? 'done' : r.completed === false ? 'missed' : '-'}</div><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div>`).join('') || '<div style="color:#8a8780;padding:12px 0">No records yet</div>'; }); } else alert('History modal not found'); }
+function fmtMs(ms: number) {
+  const h = Math.round(ms / 3600000);
+  const m = Math.round((ms % 3600000) / 60000);
+  return h + " hrs, " + m + " mins";
+}
+function openFastHistory() {
+  const page = Math.max(0, (window.historyPage || 1) - 1);
+  const m = document.getElementById("fast-history-modal");
+  if (m) {
+    m.style.display = "flex";
+    (window as any).adapter.loadAll().then((recs: any[]) => {
+      const sorted = (recs || []).sort(
+        (a, b) =>
+          new Date(b.startTime || b.endTime || 0).getTime() -
+          new Date(a.startTime || a.endTime || 0).getTime(),
+      );
+      const list = document.getElementById("history-list");
+      const totalPages = Math.max(1, Math.ceil(sorted.length / 7));
+      const totalSpan = document.getElementById("history-total-pages");
+      if (totalSpan) totalSpan.textContent = String(totalPages);
+      const prevBtn = document.getElementById("pag-prev") as HTMLElement | null;
+      const nextBtn = document.getElementById("pag-next") as HTMLElement | null;
+      if (prevBtn) prevBtn.style.display = page <= 0 ? "none" : "inline-block";
+      if (nextBtn)
+        nextBtn.style.display =
+          page >= totalPages - 1 ? "none" : "inline-block";
+      const pageNum = document.getElementById("history-page-num");
+      if (pageNum) pageNum.textContent = String(window.historyPage || 1);
+      if (list)
+        list.innerHTML =
+          sorted
+            .slice(page * 7, (page + 1) * 7)
+            .map(
+              (r: any) =>
+                `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || "-"}</strong> — ${r.startTime?.slice(0, 10) || "-"} → ${r.endTime?.slice(0, 10) || "-"} | ${r.durationMs ? fmtMs(r.durationMs) : "-"} | ${r.completed === true ? "done" : r.completed === false ? "missed" : "-"}</div><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div>`,
+            )
+            .join("") ||
+          '<div style="color:#8a8780;padding:12px 0">No records yet</div>';
+    });
+  } else alert("History modal not found");
+}
 (window as any).openFastHistory = openFastHistory;
-function syncToCloud() { alert('Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope.'); }
+(window as any).deleteConfirm = function () {
+  const id = window.deleteConfirmId;
+  if (!id) return;
+  const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
+  const filtered = arr.filter((r: any) => r.id !== id);
+  window.localStorage.setItem("fast-records-v1", JSON.stringify(filtered));
+  window.deleteConfirmId = null;
+  document.getElementById("delete-confirm-modal").style.display = "none";
+  openFastHistory();
+};
+function syncToCloud() {
+  alert(
+    "Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope.",
+  );
+}
