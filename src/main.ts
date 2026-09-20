@@ -122,14 +122,7 @@ export function renderApp(): HTMLElement {
     const savedProfile = profileRaw ? JSON.parse(profileRaw) : null;
     // Vietnam ICT (UTC+7): interpret profile times in local Vietnam time
     const eatingEndStr = savedProfile?.endTime
-      ? (() => {
-          const [h, m] = savedProfile.endTime.split(":").map(Number);
-          const d = new Date();
-          d.setHours(h, m, 0, 0);
-          // Offset UTC by -7h for Vietnam local interpretation (stored as UTC base)
-          const utcMs = d.getTime() - 7 * 3600000;
-          return new Date(utcMs).toISOString();
-        })()
+      ? new Date(savedProfile.endTime).toISOString()
       : null;
     const baseStr =
       window.localStorage.getItem("timer-base") ||
