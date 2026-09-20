@@ -226,12 +226,14 @@ export function renderApp(): HTMLElement {
       const endInput = document.getElementById(
         "fast-save-end",
       ) as HTMLInputElement;
-      if (startInput) startInput.value = baseStr.slice(0, 16).replace(" ", "T");
-      if (endInput)
-        endInput.value = new Date()
-          .toISOString()
-          .slice(0, 16)
-          .replace(" ", "T");
+      if (startInput) {
+        const d = new Date(baseStr);
+        startInput.value = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") + "T" + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+      }
+      if (endInput) {
+        const d = new Date();
+        endInput.value = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") + "T" + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+      }
       patSelect.innerHTML = ["", "16:8", "5:2", "OMAD", "custom"]
         .map(
           (p) =>
@@ -389,7 +391,7 @@ function openFastHistory() {
             .slice(page * 7, (page + 1) * 7)
             .map(
               (r: any) =>
-                `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || "-"}</strong> — ${r.startTime?.slice(0, 10) || "-"} → ${r.endTime?.slice(0, 10) || "-"} | ${r.durationMs ? fmtMs(r.durationMs) : "-"} | ${r.completed === true ? t("status.done") : r.completed === false ? t("status.missed") : "-"}</div><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div>`,
+                `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || "-"}</strong> — ${r.startTime?.slice(0, 10) || "-"} → ${r.endTime?.slice(0, 10) || "-"} | ${r.durationMs ? fmtMs(r.durationMs) : "-"} | ${r.completed === true ? t("status.done") : r.completed === false ? t("status.missed") : "-"}</div><div style="display:flex;gap:6px"><button onclick='window.editRecordId="${r.id}";openEditRecord("${r.id}")' aria-label="Edit" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Edit">✏</button><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div></div>`,
             )
             .join("") ||
           '<div style="color:#8a8780;padding:12px 0">No records yet</div>';
@@ -410,6 +412,16 @@ function openFastHistory() {
   window.deleteConfirmId = null;
   document.getElementById("delete-confirm-modal")!.style.display = "none";
   openFastHistory();
+};
+(window as any).openEditRecord = function (id: string) {
+  const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
+  const r = arr.find((x: any) => x.id === id);
+  if (!r) return;
+  (document.getElementById("fast-start-time") as HTMLInputElement).value = r.startTime || "";
+  (document.getElementById("fast-end-time") as HTMLInputElement).value = r.endTime || "";
+  (document.getElementById("fast-pattern") as HTMLSelectElement).value = r.pattern || "16:8";
+  (document.getElementById("fast-save-modal") as HTMLElement).style.display = "flex";
+  window.editRecordId = id;
 };
 function syncToCloud() {
   alert(
