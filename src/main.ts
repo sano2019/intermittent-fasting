@@ -52,6 +52,7 @@ export function renderApp(): HTMLElement {
         <button id="timer-plus" class="timer-btn" aria-label="Add hour">+</button>
       </div>
       <button id="timer-start" class="primary-btn timer-start">${t("timer.start")}</button>
+      <span id="btn-adjust-wrapper" style="display:none;">${!!window.localStorage.getItem('timer-base') ? `<button onclick="document.getElementById('adjust-start-modal').style.display='flex';document.getElementById('adjust-start-time').value=window.localStorage.getItem('timer-base')?(() => { const d = new Date(window.localStorage.getItem('timer-base')||''); if(isNaN(d.getTime())){d=new Date();} const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })():(() => { const d = new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })();" class="btn label" id="btn-adjust-start" style="margin-top:0.75rem;background:var(--accent);">Adjust start time</button>` : ''}</span>
     </section>
 
     <section class="card">
@@ -64,6 +65,8 @@ export function renderApp(): HTMLElement {
     <footer>
       ${t("footer.note")}
     </footer>
+
+    <div id="adjust-start-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:60; align-items:center; justify-content:center;"><div class="modal-inner card" style="padding:1.5rem; max-width:320px;"><h3 class="label" style="margin-top:0;">Adjust start time</h3><p>Start: <input type="datetime-local" id="adjust-start-time" /></p><div style="display:flex; gap:8px; justify-content:flex-end;"><button onclick="document.getElementById('adjust-start-modal').style.display='none';" class="btn">Cancel</button><button onclick="const s=document.getElementById('adjust-start-time')?.value; if(s){ window.localStorage.setItem('timer-base', new Date(s).toISOString()); } document.getElementById('adjust-start-modal').style.display='none';" class="btn" style="background:var(--accent);">Save</button></div></div></div>
 
     <div id="fast-save-modal" class="fast-save-modal" style="display:none;">
       <div class="modal-inner card">
@@ -194,6 +197,8 @@ export function renderApp(): HTMLElement {
     // Lock +/- selectors when fast is running
     const controls = document.querySelector(".timer-controls");
     if (controls) (controls as HTMLElement).classList.toggle("locked", running);
+    const btnWrap = document.getElementById("btn-adjust-wrapper");
+    if (btnWrap) (btnWrap as HTMLElement).style.display = running ? "inline-block" : "none";
   };
   setBtnState();
   (window as any).setBtnState = setBtnState;
