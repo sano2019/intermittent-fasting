@@ -51,8 +51,8 @@ export function renderApp(): HTMLElement {
         <span class="timer-window">${(window.localStorage.getItem("fast-hours") || "16") + " " + t("timer.unit")}</span>
         <button id="timer-plus" class="timer-btn" aria-label="Add hour">+</button>
       </div>
+      <span id="btn-adjust-wrapper" class="btn-adjust-wrapper" style="display:none;">${(window.localStorage.getItem('timer-base') ? `<button onclick="document.getElementById('adjust-start-modal').style.display='flex';document.getElementById('adjust-start-time').value=window.localStorage.getItem('timer-base')?(() => { const d = new Date(window.localStorage.getItem('timer-base')||''); if(isNaN(d.getTime())){d=new Date();} const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })():(() => { const d = new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })();" class="btn-secondary" id="btn-adjust-start">Adjust start time</button>` : `<button onclick="document.getElementById('adjust-start-modal').style.display='flex';document.getElementById('adjust-start-time').value=window.localStorage.getItem('timer-base')?(() => { const d = new Date(window.localStorage.getItem('timer-base')||''); if(isNaN(d.getTime())){d=new Date();} const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })():(() => { const d = new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })();" class="btn-secondary" id="btn-adjust-start">Adjust start time</button>`)}</span>
       <button id="timer-start" class="primary-btn timer-start">${t("timer.start")}</button>
-      <span id="btn-adjust-wrapper" style="display:none;">${!!window.localStorage.getItem('timer-base') ? `<button onclick="document.getElementById('adjust-start-modal').style.display='flex';document.getElementById('adjust-start-time').value=window.localStorage.getItem('timer-base')?(() => { const d = new Date(window.localStorage.getItem('timer-base')||''); if(isNaN(d.getTime())){d=new Date();} const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })():(() => { const d = new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })();" class="btn label" id="btn-adjust-start" style="margin-top:0.75rem;background:var(--accent);">Adjust start time</button>` : ''}</span>
     </section>
 
     <section class="card">
@@ -68,7 +68,7 @@ export function renderApp(): HTMLElement {
 
     <div id="adjust-start-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:60; align-items:center; justify-content:center;"><div class="modal-inner card" style="padding:1.5rem; max-width:320px;"><h3 class="label" style="margin-top:0;">Adjust start time</h3><p>Start: <input type="datetime-local" id="adjust-start-time" /></p><div style="display:flex; gap:8px; justify-content:flex-end;"><button onclick="document.getElementById('adjust-start-modal').style.display='none';" class="btn">Cancel</button><button onclick="const s=document.getElementById('adjust-start-time')?.value; if(s){ window.localStorage.setItem('timer-base', new Date(s).toISOString()); } document.getElementById('adjust-start-modal').style.display='none';" class="btn" style="background:var(--accent);">Save</button></div></div></div>
 
-    <div id="fast-save-modal" class="fast-save-modal" style="display:none;">
+    <div id="fast-save-modal" class="fast-save-modal" class="btn-adjust-wrapper" style="display:none;">
       <div class="modal-inner card">
         <h3>Confirm Fast</h3>
         <p>Duration: <span id="fast-save-duration"></span></p>
@@ -90,7 +90,7 @@ export function renderApp(): HTMLElement {
         </div>
       </div>
     </div>
-    <div id="fast-history-modal" class="fast-history-modal" style="display:none;">
+    <div id="fast-history-modal" class="fast-history-modal" class="btn-adjust-wrapper" style="display:none;">
       <div class="modal-inner">
         <h3>${t("history.title")}</h3>
         <div id="history-list"></div>
@@ -253,6 +253,7 @@ export function renderApp(): HTMLElement {
         "fast-pattern",
         window.localStorage.getItem("profile-pattern") || "16:8",
       );
+      setBtnState(); // hot-refresh button visibility after start
     }
     setBtnState();
   });
