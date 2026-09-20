@@ -279,7 +279,7 @@ footer {
 #history-card { margin-top: 2rem; padding: 1rem; border: 1px solid var(--border); border-radius: 8px; }
 #history-card h2 { font-size: 1rem; color: var(--accent); }
 
-.fast-save-modal { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:50; }
+.fast-save-modal { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:60; }
 
 /* Inline-style replacements for /simplify-code */
 .label-delete-note { margin:0.5rem 0 1rem; color:var(--muted-foreground); font-size:0.95rem; }

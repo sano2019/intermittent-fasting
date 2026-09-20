@@ -73,7 +73,7 @@ export function renderApp(): HTMLElement {
         <p>Start: <input type="datetime-local" id="fast-save-start" /></p>
         <p>End: <input type="datetime-local" id="fast-save-end" /></p>
         <button onclick="document.getElementById('fast-save-modal').style.display='none';window.localStorage.removeItem('timer-base');window.localStorage.removeItem('fast-pattern');setBtnState();">Cancel</button>
-        <button onclick="const s=document.getElementById('fast-save-start')?.value||'';const e=document.getElementById('fast-save-end')?.value||'';const p=document.getElementById('fast-save-pattern')?.value||'';const dur=Math.max(0,new Date(e||Date.now()).getTime()-new Date(s||window.localStorage.getItem('timer-start')||Date.now()).getTime());const arr=JSON.parse(window.localStorage.getItem('fast-records-v1')||'[]');arr.push({id:'fast-'+Date.now(),startTime:s||new Date().toISOString(),endTime:e||new Date().toISOString(),durationMs:dur,completed:true,pattern:p,createdAt:new Date().toISOString()});window.localStorage.setItem('fast-records-v1',JSON.stringify(arr));document.getElementById('fast-save-modal').style.display='none';window.localStorage.removeItem('timer-base');window.localStorage.removeItem('fast-pattern');setBtnState();">Save</button>
+        <button onclick="const s=document.getElementById('fast-save-start')?.value||'';const e=document.getElementById('fast-save-end')?.value||'';const p=document.getElementById('fast-save-pattern')?.value||'';const dur=Math.max(0,new Date(e||Date.now()).getTime()-new Date(s||window.localStorage.getItem('timer-start')||Date.now()).getTime());const arr=JSON.parse(window.localStorage.getItem('fast-records-v1')||'[]');const editId=window.editRecordId||null; if(editId){ const idx=arr.findIndex(x=>x.id===editId); if(idx>=0){ arr[idx]={...arr[idx],startTime:s||arr[idx].startTime,endTime:e||arr[idx].endTime,durationMs:dur,pattern:p||arr[idx].pattern}; } } else { arr.push({id:'fast-'+Date.now(),startTime:s||new Date().toISOString(),endTime:e||new Date().toISOString(),durationMs:dur,completed:true,pattern:p,createdAt:new Date().toISOString()}); } window.localStorage.setItem('fast-records-v1',JSON.stringify(arr));document.getElementById('fast-save-modal').style.display='none';window.localStorage.removeItem('timer-base');window.localStorage.removeItem('fast-pattern');window.editRecordId=null;setBtnState();">Save</button>
       </div>
     </div>
 
@@ -417,12 +417,13 @@ function openFastHistory() {
   const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
   const r = arr.find((x: any) => x.id === id);
   if (!r) return;
-  (document.getElementById("fast-start-time") as HTMLInputElement).value = r.startTime || "";
-  (document.getElementById("fast-end-time") as HTMLInputElement).value = r.endTime || "";
-  (document.getElementById("fast-pattern") as HTMLSelectElement).value = r.pattern || "16:8";
   (document.getElementById("fast-save-modal") as HTMLElement).style.display = "flex";
+  (document.getElementById("fast-save-start") as HTMLInputElement).value = r.startTime || "";
+  (document.getElementById("fast-save-end") as HTMLInputElement).value = r.endTime || "";
+  (document.getElementById("fast-save-pattern") as HTMLSelectElement).value = r.pattern || "";
   window.editRecordId = id;
 };
+console.log("openEditRecord registered:", typeof (window as any).openEditRecord);
 function syncToCloud() {
   alert(
     "Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope.",
