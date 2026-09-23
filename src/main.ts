@@ -444,10 +444,10 @@ function openFastHistory() {
             .map(
               (r: any) =>
                 `<div style="border-radius:1rem; padding:0.75rem 0.5rem; margin-bottom:0.75rem; border-bottom:1px solid #eae8e0; line-height:1.35;">
-<span style="font-size:0.75rem; color:#8a8780;">${(() => { const d = new Date(r.startTime||r.endTime||0); const k = ['sun','mon','tue','wed','thu','fri','sat'][d.getDay()]||'mon'; return (typeof t==='function' ? (t('days.'+k)||d.toLocaleDateString('en-GB',{weekday:'short'})) : d.toLocaleDateString('en-GB',{weekday:'short'})); })()} ${new Date(r.startTime||r.endTime||0).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} → ${new Date(r.endTime||r.startTime||0).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span>
+<span style="font-size:0.75rem; color:#8a8780;">${(() => { const d = new Date(r.startTime||r.endTime||0); const is52 = r.pattern==='5:2'; const k = ['sun','mon','tue','wed','thu','fri','sat'][d.getDay()]||'mon'; const label = (typeof t==='function' ? (t('days.'+k)||d.toLocaleDateString('en-GB',{weekday:'short'})) : d.toLocaleDateString('en-GB',{weekday:'short'})); return is52 ? label + ' — ' + (r.kcal ? r.kcal+' kcal':'') : label + ' ' + new Date(r.startTime||r.endTime||0).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) + ' → ' + new Date(r.endTime||r.startTime||0).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); })()}</span>
 <div style="display:flex;gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px; flex-grow:1;">
 <span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#eae8e0; color:#5a574e; font-size:0.8rem; font-weight:600;">${r.pattern||"-"}</span>
-<span style="font-size:0.9rem; font-weight:500;">${r.durationMs ? fmtMs(r.durationMs).replace(',','') : "-"}</span>
+<span style="font-size:0.9rem; font-weight:500;">${r.pattern==='5:2' ? (r.kcal ? r.kcal + ' kcal' : '-') : (r.durationMs ? fmtMs(r.durationMs).replace(',','') : "-")}</span>
 <span class="indicator ${(() => { const tMs = r.pattern==='OMAD'?86400000:r.pattern==='16:8'?57600000:0; const dMs = (r.durationMs||0); if (tMs>0 && dMs>0 && dMs<tMs) return 'missed'; if (dMs>0) return 'active'; return 'missed'; })()}" style="width:8px;height:8px;border-radius:50%;display:inline-block;" title="${(() => { const tMs = r.pattern==='OMAD'?86400000:r.pattern==='16:8'?57600000:0; const dMs = (r.durationMs||0); const label = (tMs>0 && dMs>0 && dMs<tMs) ? (t('status.partial')||'Partial') : (dMs>0 ? (t('status.done')||'Done') : (t('status.missed')||'Missed')); return label; })()}"></span>
 <button onclick='window.editRecordId="${r.id}";openEditRecord("${r.id}")' aria-label="Edit" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1rem;line-height:1;" title="Edit">✏</button>
 <button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:#c7bfae;cursor:pointer;font-size:1rem;line-height:1;" title="Delete">🗑</button>
@@ -518,6 +518,12 @@ function syncToCloud() {
     existing.push({ date: d, kcal: parseInt(accText, 10) });
     window.localStorage.setItem("light-days", JSON.stringify(existing));
     window.localStorage.setItem("cal-accum", "0");
+    // Push 5:2 light-day to adapter (visible in fast-history) — date-keyed; no durationMs (cal-only)
+    const lightRecord: any = { id: "light-" + d, startTime: d + "T08:00:00.000Z", endTime: d + "T20:00:00.000Z", durationMs: 43200000, completed: true, pattern: "5:2", createdAt: new Date().toISOString(), kcal: parseInt(accText, 10) || 0 };
+    const adapter: any = (window as any).adapter;
+    if (adapter && adapter.save) adapter.save(lightRecord).catch(() => {});
+    const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
+    arr.push(lightRecord); window.localStorage.setItem("fast-records-v1", JSON.stringify(arr));
     if (btn) { btn.textContent = "Start light day"; btn.style.background = "#c7bfae"; btn.style.color = "#222"; }
     document.getElementById("cal-total")!.textContent = "0";
   }
