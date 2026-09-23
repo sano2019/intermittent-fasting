@@ -68,7 +68,7 @@ export function renderApp(): HTMLElement {
 
     <div id="adjust-start-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:60; align-items:center; justify-content:center;"><div class="modal-inner card" style="padding:1.5rem; max-width:340px; width:92%;"><h3 class="label" style="margin-top:0;">Adjust start time</h3><p style="margin:1rem 0;">Start: <input type="datetime-local" id="adjust-start-time" style="min-height:48px; font-size:1.05rem; padding:0.5rem;" /></p><div style="display:flex; flex-direction:column; gap:0.75rem; align-items:stretch; margin-top:1rem;"><button onclick="document.getElementById('adjust-start-modal').style.display='none';" class="btn" style="min-height:48px; padding:0.75rem; font-size:1.05rem;">Cancel</button><button onclick="const s=document.getElementById('adjust-start-time')?.value; if(s){ window.localStorage.setItem('timer-base', new Date(s).toISOString()); } document.getElementById('adjust-start-modal').style.display='none';" class="btn" style="min-height:48px; padding:0.75rem; font-size:1.05rem; background:var(--accent);">Save</button></div></div></div>
 
-    <div id="fast-save-modal" class="fast-save-modal" class="btn-adjust-wrapper" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:60; align-items:center; justify-content:center;">
+    <div id="fast-save-modal" class="fast-save-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:60; align-items:center; justify-content:center;">
       <div class="modal-inner card" style="padding:1.5rem; max-width:340px; width:92%; border-radius:1.25rem;">
         <h3>Confirm Fast</h3>
         <p>Duration: <span id="fast-save-duration"></span></p>
@@ -247,7 +247,17 @@ export function renderApp(): HTMLElement {
             `<option value="${p}" ${p === pattern ? "selected" : ""}>${p || "(blank)"}</option>`,
         )
         .join("");
-      modal.style.display = "block";
+      // If timer-base missing (modal shown without active timer), compute duration from start/end inputs
+      if (!baseStr) {
+        const sStr = startInput?.value || ""; const eStr = endInput?.value || "";
+        if (sStr && eStr) {
+          const dMs = Math.max(0, new Date(eStr).getTime() - new Date(sStr).getTime());
+          durSpan.textContent = fmtMs ? fmtMs(dMs) : "0 hrs, 0 mins";
+        } else {
+          durSpan.textContent = fmtMs ? fmtMs(0) : "0 hrs, 0 mins";
+        }
+      }
+      modal.style.display = "flex";
       window.localStorage.removeItem("timer-base");
     } else {
       window.localStorage.setItem("timer-base", new Date().toISOString());
@@ -260,8 +270,11 @@ export function renderApp(): HTMLElement {
     setBtnState();
   });
 
-  // Pill toggle: Elapsed / Remaining
-  let showRemaining = false;
+  // Pill toggle: Elapsed / Remaining (default: Remaining per 2026-09-23 update)
+  let showRemaining = true;
+  // Active/inactive pill states: default = Remaining active, Elapsed inactive
+  document.getElementById("mode-remaining")?.classList.add("active");
+  document.getElementById("mode-elapsed")?.classList.remove("active");
   document.getElementById("mode-elapsed")?.addEventListener("click", () => {
     showRemaining = false;
     document.getElementById("mode-elapsed")!.textContent = t("timer.elapsed");
@@ -348,9 +361,14 @@ function renderWeeklyStats(app: HTMLElement) {
           const d = days[i];
           const entry = entryByDay[i];
           let cls = "dot";
-          if (entry && (entry.durationMs || 0) > 0) cls = "dot active";
-          else if (entry && entry.startTime && !(entry.durationMs || 0))
-            cls = "dot missed";
+          if (entry && entry.pattern) {
+            const targetMs = entry.pattern === 'OMAD' ? 86400000 : entry.pattern === '16:8' ? 57600000 : 0;
+            const dMs = (entry.durationMs || 0);
+            if (targetMs > 0 && dMs > 0 && dMs < targetMs) cls = "dot missed"; // partial: amber
+            else if (dMs > 0) cls = "dot active"; // done (green): full target or custom (>0 with no target)
+            else cls = "dot missed"; // zero
+          } else if (entry && (entry.durationMs || 0) > 0) cls = "dot active"; // custom: any >0 = green
+          else if (entry) cls = "dot missed";
           const labelText = d.length > 3 ? d.substring(0, 3) : d;
           return `<div class="week-day"><span class="dot ${cls}" title="${d}"></span><span class="label">${labelText}</span></div>`;
         })
@@ -400,11 +418,11 @@ function openFastHistory() {
             .map(
               (r: any) =>
                 `<div style="border-radius:1rem; padding:0.75rem 0.5rem; margin-bottom:0.75rem; border-bottom:1px solid #eae8e0; line-height:1.35;">
-<span style="font-size:0.75rem; color:#8a8780;">${new Date(r.startTime||r.endTime||0).toLocaleDateString('sv-SE',{weekday:'short'})} ${new Date(r.startTime||r.endTime||0).toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})} → ${new Date(r.endTime||r.startTime||0).toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})}</span>
+<span style="font-size:0.75rem; color:#8a8780;">${(() => { const d = new Date(r.startTime||r.endTime||0); const k = ['sun','mon','tue','wed','thu','fri','sat'][d.getDay()]||'mon'; return (typeof t==='function' ? (t('days.'+k)||d.toLocaleDateString('en-GB',{weekday:'short'})) : d.toLocaleDateString('en-GB',{weekday:'short'})); })()} ${new Date(r.startTime||r.endTime||0).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} → ${new Date(r.endTime||r.startTime||0).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span>
 <div style="display:flex;gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px; flex-grow:1;">
 <span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#eae8e0; color:#5a574e; font-size:0.8rem; font-weight:600;">${r.pattern||"-"}</span>
 <span style="font-size:0.9rem; font-weight:500;">${r.durationMs ? fmtMs(r.durationMs).replace(',','') : "-"}</span>
-<span class="indicator ${r.completed===true?'active':r.completed===false?'missed':''}" style="width:8px;height:8px;border-radius:50%;display:inline-block;" title="${r.completed===true?t('status.done'):r.completed===false?t('status.missed'):''}"></span>
+<span class="indicator ${(() => { const tMs = r.pattern==='OMAD'?86400000:r.pattern==='16:8'?57600000:0; const dMs = (r.durationMs||0); if (tMs>0 && dMs>0 && dMs<tMs) return 'missed'; if (dMs>0) return 'active'; return 'missed'; })()}" style="width:8px;height:8px;border-radius:50%;display:inline-block;" title="${(() => { const tMs = r.pattern==='OMAD'?86400000:r.pattern==='16:8'?57600000:0; const dMs = (r.durationMs||0); const label = (tMs>0 && dMs>0 && dMs<tMs) ? (t('status.partial')||'Partial') : (dMs>0 ? (t('status.done')||'Done') : (t('status.missed')||'Missed')); return label; })()}"></span>
 <button onclick='window.editRecordId="${r.id}";openEditRecord("${r.id}")' aria-label="Edit" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1rem;line-height:1;" title="Edit">✏</button>
 <button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:#c7bfae;cursor:pointer;font-size:1rem;line-height:1;" title="Delete">🗑</button>
 </div>
@@ -434,11 +452,16 @@ function openFastHistory() {
   const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
   const r = arr.find((x: any) => x.id === id);
   if (!r) return;
-  (document.getElementById("fast-save-modal") as HTMLElement).style.display = "flex";
+  (document.getElementById("fast-history-modal") as HTMLElement).style.display = "flex";
   (document.getElementById("fast-save-start") as HTMLInputElement).value = r.startTime || "";
   (document.getElementById("fast-save-end") as HTMLInputElement).value = r.endTime || "";
   (document.getElementById("fast-save-pattern") as HTMLSelectElement).value = r.pattern || "";
   window.editRecordId = id;
+  // Refresh duration label when editing (fix e1f94e): compute from loaded start/end
+  const sVal = r.startTime || ""; const eVal = r.endTime || "";
+  const durMsEdit = Math.max(0, new Date(eVal || Date.now()).getTime() - new Date(sVal || Date.now()).getTime());
+  const durSpanEdit = document.getElementById("fast-save-duration") as HTMLElement;
+  if (durSpanEdit && (window as any).fmtMs) durSpanEdit.textContent = (window as any).fmtMs ? (window as any).fmtMs(durMsEdit) : `${Math.floor(durMsEdit / 3600000)} hrs, ${Math.round((durMsEdit % 3600000) / 60000)} mins`;
 };
 console.log("openEditRecord registered:", typeof (window as any).openEditRecord);
 function syncToCloud() {
