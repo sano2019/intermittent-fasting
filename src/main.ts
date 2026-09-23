@@ -399,7 +399,16 @@ function openFastHistory() {
             .slice(page * 7, (page + 1) * 7)
             .map(
               (r: any) =>
-                `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eae8e0"><div><strong>${r.pattern || "-"}</strong> — ${r.startTime?.slice(0, 10) || "-"} → ${r.endTime?.slice(0, 10) || "-"} | ${r.durationMs ? fmtMs(r.durationMs) : "-"} | ${r.completed === true ? t("status.done") : r.completed === false ? t("status.missed") : "-"}</div><div style="display:flex;gap:6px"><button onclick='window.editRecordId="${r.id}";openEditRecord("${r.id}")' aria-label="Edit" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Edit">✏</button><button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1.1rem;line-height:1;" title="Delete">🗑</button></div></div>`,
+                `<div style="border-radius:1rem; padding:0.75rem 0.5rem; margin-bottom:0.75rem; border-bottom:1px solid #eae8e0; line-height:1.35;">
+<span style="font-size:0.75rem; color:#8a8780;">${new Date(r.startTime||r.endTime||0).toLocaleDateString('sv-SE',{weekday:'short'})} ${new Date(r.startTime||r.endTime||0).toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})} → ${new Date(r.endTime||r.startTime||0).toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})}</span>
+<div style="display:flex;gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px; flex-grow:1;">
+<span style="display:inline-block; padding:2px 8px; border-radius:999px; background:#eae8e0; color:#5a574e; font-size:0.8rem; font-weight:600;">${r.pattern||"-"}</span>
+<span style="font-size:0.9rem; font-weight:500;">${r.durationMs ? fmtMs(r.durationMs).replace(',','') : "-"}</span>
+<span class="indicator ${r.completed===true?'active':r.completed===false?'missed':''}" style="width:8px;height:8px;border-radius:50%;display:inline-block;" title="${r.completed===true?t('status.done'):r.completed===false?t('status.missed'):''}"></span>
+<button onclick='window.editRecordId="${r.id}";openEditRecord("${r.id}")' aria-label="Edit" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1rem;line-height:1;" title="Edit">✏</button>
+<button onclick='window.deleteConfirmId="${r.id}"; document.getElementById("delete-confirm-modal").style.display="flex";' aria-label="Delete" style="background:none;border:none;color:#c7bfae;cursor:pointer;font-size:1rem;line-height:1;" title="Delete">🗑</button>
+</div>
+</div>`,
             )
             .join("") ||
           '<div style="color:#8a8780;padding:12px 0">No records yet</div>';
