@@ -26,6 +26,10 @@ const patterns: { key: FastingPattern; label: string; note: string }[] = [
 export function renderApp(): HTMLElement {
   const app = document.getElementById("app")!;
   app.className = "app";
+  // Read profile pattern before building HTML (used in timer-controls and timer-window)
+  const savedPattern = (window.localStorage.getItem("profile-pattern") as string) || "custom";
+  const savedHours = window.localStorage.getItem("fast-hours") ? parseInt(window.localStorage.getItem("fast-hours")!, 10) : 16;
+  const FAST_WINDOW_H = ("OMAD" === savedPattern || window.localStorage.getItem("profile-pattern") === "OMAD") ? 24 : ("16:8" === savedPattern || window.localStorage.getItem("profile-pattern") === "16:8") ? 16 : savedHours;
 
   app.innerHTML = `
     <header>
@@ -37,6 +41,21 @@ export function renderApp(): HTMLElement {
     </header>
 
     <section class="card timer-ring-card" id="timer-card">
+      ${savedPattern === "5:2" || window.localStorage.getItem("profile-pattern") === "5:2" ? `
+      <h2 class="timer-card-title">5:2 · ${t("timer.calorie_day") || "Calorie Day"}</h2>
+      <div class="cal-display" style="text-align:center;margin:10px 0 8px;">
+        <span id="cal-total" style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:2.6rem;color:#c7bfae;line-height:1.1;">0</span>
+        <div style="font-size:.78rem;color:#6e6c60;margin-top:4px;">kcal · light day — <span id="light-date" style="font-family:'DM Sans',system-ui,sans-serif;color:#a9a591;font-size:.72rem;letter-spacing:.03em;">—</span></div>
+      </div>
+      <label style="display:block;font-size:.8rem;color:#6e6c60;margin-bottom:6px;font-family:'DM Sans',system-ui,sans-serif;letter-spacing:.01em;">Cal intake <span style="font-size:.7rem;color:#a9a591;font-weight:300;">(enter each meal; accumulates)</span></label>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input id="cal-intake" type="number" min="0" placeholder="kcal" style="flex:1;padding:.55rem .75rem;border-radius:.75rem;border:1px solid #eae8e0;background:#fff;font-family:'DM Sans',system-ui,sans-serif;font-size:.95rem;color:#222;outline:none;letter-spacing:.01em;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,4);" aria-label="Calorie entry" />
+        <button onclick="addCalEntry()" style="padding:.55rem .9rem;border-radius:.75rem;border:1px solid #c7bfae;background:#fff;color:#222;font-family:'DM Sans',system-ui,sans-serif;font-size:.85rem;letter-spacing:.01em;font-weight:500;">+</button>
+      </div>
+      <div style="font-size:.78rem;color:#c7bfae;margin-top:10px;line-height:1.4;">Suggested: <b>600 cal</b> (men) · <b>500 cal</b> (women)</div>
+      <div style="margin-top:4px;font-size:.7rem;color:#6e6c60;font-family:'DM Sans',system-ui,sans-serif;letter-spacing:.01em;">Each entry accumulates. <button onclick="clearCalDay()" style="background:none;border:none;color:#c7bfae;text-decoration:underline;font-size:.7rem;font-family:inherit;cursor:pointer;">Clear</button> resets for the next light day.</div>
+      <button id="btn-light-day" class="primary-btn timer-start" onclick="toggleLightDay()" style="margin-top:.8rem;width:100%;padding:.75rem;border-radius:.75rem;background:#c7bfae;color:#222;font-family:DM Sans,system-ui,sans-serif;font-weight:500;letter-spacing:.01em;">Start light day</button>
+      ` : `
       <h2 class="timer-card-title">${t("tracking.fast")}</h2>
       <div class="mode-pills"><button id="mode-elapsed" class="pill active">${t("timer.elapsed")}</button><button id="mode-remaining" class="pill">${t("timer.remaining")}</button></div>
       <div class="ring-wrap">
@@ -46,13 +65,14 @@ export function renderApp(): HTMLElement {
         </svg>
         <div id="timer-display" class="ring-time"><span id="timer-time">00:00:00</span></div>
       </div>
-      <div class="timer-controls">
+      <div class="timer-controls" ${savedPattern === "16:8" || savedPattern === "OMAD" || window.localStorage.getItem("profile-pattern") === "16:8" || window.localStorage.getItem("profile-pattern") === "OMAD" ? 'style="display:none;"' : ''}>
         <button id="timer-minus" class="timer-btn" aria-label="Subtract hour">−</button>
-        <span class="timer-window">${(window.localStorage.getItem("fast-hours") || "16") + " " + t("timer.unit")}</span>
+        <span class="timer-window">${FAST_WINDOW_H + " " + t("timer.unit")}</span>
         <button id="timer-plus" class="timer-btn" aria-label="Add hour">+</button>
       </div>
       <span id="btn-adjust-wrapper" class="btn-adjust-wrapper" style="display:none;">${(window.localStorage.getItem('timer-base') ? `<button onclick="document.getElementById('adjust-start-modal').style.display='flex';document.getElementById('adjust-start-time').value=window.localStorage.getItem('timer-base')?(() => { const d = new Date(window.localStorage.getItem('timer-base')||''); if(isNaN(d.getTime())){d=new Date();} const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })():(() => { const d = new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })();" class="btn-secondary" id="btn-adjust-start">Adjust start time</button>` : `<button onclick="document.getElementById('adjust-start-modal').style.display='flex';document.getElementById('adjust-start-time').value=window.localStorage.getItem('timer-base')?(() => { const d = new Date(window.localStorage.getItem('timer-base')||''); if(isNaN(d.getTime())){d=new Date();} const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })():(() => { const d = new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes()); })();" class="btn-secondary" id="btn-adjust-start">Adjust start time</button>`)}</span>
       <button id="timer-start" class="primary-btn timer-start">${t("timer.start")}</button>
+      `}
     </section>
 
     <section class="card">
@@ -133,13 +153,8 @@ export function renderApp(): HTMLElement {
       window.localStorage.getItem("timer-base") ||
       eatingEndStr ||
       new Date().toISOString();
-    // Read pattern once (already read above at line 90-92; re-use savedProfile)
-    const savedPattern = (savedProfile?.pattern as string) || "custom";
+    // Pattern already read at top-level savedPattern (line 29); re-use it here
     // For 16:8: fast window = 16h (counted from eating end); feed window = 8h
-    const savedHours = window.localStorage.getItem("fast-hours")
-      ? parseInt(window.localStorage.getItem("fast-hours")!, 10)
-      : 16;
-    const FAST_WINDOW_H = savedHours;
     const base = baseStr ? new Date(baseStr) : new Date();
     const elapsedMs = Date.now() - base.getTime();
     const remainingMs = FAST_WINDOW_H * 3600000 - elapsedMs;
@@ -192,8 +207,9 @@ export function renderApp(): HTMLElement {
   });
 
   // Start / Stop fast toggle
-  const startBtn = document.getElementById("timer-start")!;
+  const startBtn = document.getElementById("timer-start");
   const setBtnState = () => {
+    if (!startBtn) return; // profile may use light-day toggle instead of timer-start
     const running = !!window.localStorage.getItem("timer-base");
     startBtn.textContent = running ? t("timer.stop") : t("timer.start");
     // Lock +/- selectors when fast is running
@@ -204,7 +220,7 @@ export function renderApp(): HTMLElement {
   };
   setBtnState();
   (window as any).setBtnState = setBtnState;
-  startBtn.addEventListener("click", () => {
+  if (startBtn) startBtn.addEventListener("click", () => {
     const running = !!window.localStorage.getItem("timer-base");
     if (running) {
       // Confirm save: duration + pattern select before clearing timer-base
@@ -247,7 +263,12 @@ export function renderApp(): HTMLElement {
             `<option value="${p}" ${p === pattern ? "selected" : ""}>${p || "(blank)"}</option>`,
         )
         .join("");
-      // If timer-base missing (modal shown without active timer), compute duration from start/end inputs
+      // Only show meal-time field for OMAD
+      const mealRow = document.createElement("div");
+      if (pattern === "OMAD" || (patSelect && (patSelect as HTMLSelectElement).value === "OMAD")) {
+        mealRow.innerHTML = `<label style="display:block;margin-top:10px;font-size:0.82rem;color:#6e6c60;font-family:DM Sans">Meal at: <input type="time" id="fast-save-meal-time" style="margin-left:8px;border:1px solid #eae8e0;border-radius:0.75rem;padding:6px 8px;font-family:Cormorant Serif;font-size:1rem;background:#fff;color:#232220;" value="${new Date().getHours().toString().padStart(2,"0")}:${new Date().getMinutes().toString().padStart(2,"0")}"></label>`;
+        modal.querySelector(".modal-inner")?.appendChild(mealRow);
+      }
       if (!baseStr) {
         const sStr = startInput?.value || ""; const eStr = endInput?.value || "";
         if (sStr && eStr) {
@@ -265,6 +286,11 @@ export function renderApp(): HTMLElement {
         "fast-pattern",
         window.localStorage.getItem("profile-pattern") || "16:8",
       );
+      // Capture meal-time for OMAD profile
+      const mealInput = document.getElementById("fast-save-meal-time") as HTMLInputElement | null;
+      if (mealInput && (window.localStorage.getItem("profile-pattern") === "OMAD" || (window.localStorage.getItem("fast-pattern") === "OMAD"))) {
+        window.localStorage.setItem("fast-meal-time", mealInput.value || "");
+      }
       setBtnState(); // hot-refresh button visibility after start
     }
     setBtnState();
@@ -452,20 +478,72 @@ function openFastHistory() {
   const arr = JSON.parse(window.localStorage.getItem("fast-records-v1") || "[]");
   const r = arr.find((x: any) => x.id === id);
   if (!r) return;
-  (document.getElementById("fast-history-modal") as HTMLElement).style.display = "flex";
-  (document.getElementById("fast-save-start") as HTMLInputElement).value = r.startTime || "";
-  (document.getElementById("fast-save-end") as HTMLInputElement).value = r.endTime || "";
-  (document.getElementById("fast-save-pattern") as HTMLSelectElement).value = r.pattern || "";
+  // Open edit flow: show save-confirm modal (not the history list) for editing record
+  const saveModal = document.getElementById("fast-save-modal") as HTMLElement | null;
+  if (saveModal) saveModal.style.display = "flex";
+  const st = document.getElementById("fast-save-start") as HTMLInputElement | null; if (st) st.value = r.startTime || "";
+  const et = document.getElementById("fast-save-end") as HTMLInputElement | null; if (et) et.value = r.endTime || "";
+  const pat = document.getElementById("fast-save-pattern") as HTMLSelectElement | null; if (pat) pat.value = r.pattern || "";
   window.editRecordId = id;
   // Refresh duration label when editing (fix e1f94e): compute from loaded start/end
   const sVal = r.startTime || ""; const eVal = r.endTime || "";
   const durMsEdit = Math.max(0, new Date(eVal || Date.now()).getTime() - new Date(sVal || Date.now()).getTime());
-  const durSpanEdit = document.getElementById("fast-save-duration") as HTMLElement;
-  if (durSpanEdit && (window as any).fmtMs) durSpanEdit.textContent = (window as any).fmtMs ? (window as any).fmtMs(durMsEdit) : `${Math.floor(durMsEdit / 3600000)} hrs, ${Math.round((durMsEdit % 3600000) / 60000)} mins`;
+  const durSpanEdit = document.getElementById("fast-save-duration") as HTMLElement | null;
+  if (durSpanEdit && (window as any).fmtMs && typeof (window as any).fmtMs === "function") durSpanEdit.textContent = (window as any).fmtMs(durMsEdit);
 };
 console.log("openEditRecord registered:", typeof (window as any).openEditRecord);
 function syncToCloud() {
   alert(
     "Sync: adapter.loadAll() -> SQLite (userId); OAuth/account future scope.",
   );
+}
+
+// 5:2 light-day tracking: start records date + clears; stop saves date + acc to adapter; clear resets
+(window as any).toggleLightDay = () => {
+  const btn = document.getElementById("btn-light-day") as HTMLButtonElement | null;
+  const running = btn?.textContent?.includes("Stop");
+  if (!running) {
+    // Start
+    const d = new Date().toISOString().split("T")[0];
+    window.localStorage.setItem("light-date", d);
+    window.localStorage.setItem("cal-accum", "0");
+    if (btn) { btn.textContent = "Stop light day"; btn.style.background = "#222"; btn.style.color = "#c7bfae"; }
+    document.getElementById("cal-total")!.textContent = "0";
+    document.getElementById("light-date")!.textContent = d;
+  } else {
+    // Stop — save to adapter (date-keyed; supports 2 non-consecutive days)
+    const accText = document.getElementById("cal-total")!.textContent || "0";
+    const d = document.getElementById("light-date")!.textContent || new Date().toISOString().split("T")[0];
+    const existing = JSON.parse(window.localStorage.getItem("light-days") || "[]");
+    existing.push({ date: d, kcal: parseInt(accText, 10) });
+    window.localStorage.setItem("light-days", JSON.stringify(existing));
+    window.localStorage.setItem("cal-accum", "0");
+    if (btn) { btn.textContent = "Start light day"; btn.style.background = "#c7bfae"; btn.style.color = "#222"; }
+    document.getElementById("cal-total")!.textContent = "0";
+  }
+};
+(window as any).clearCalDay = () => {
+  window.localStorage.setItem("cal-accum", "0");
+  document.getElementById("cal-total")!.textContent = "0";
+};
+(window as any).addCalEntry = () => {
+  const input = document.getElementById("cal-intake") as HTMLInputElement | null;
+  if (!input) return;
+  const v = parseInt(input.value || "0", 10);
+  if (v <= 0) { input.focus(); return; }
+  const acc = parseInt(window.localStorage.getItem("cal-accum") || "0", 10);
+  window.localStorage.setItem("cal-accum", String(acc + v));
+  document.getElementById("cal-total")!.textContent = String(acc + v);
+  input.value = "";
+};
+// Restore accumulated value on load (if same-day continuation)
+const calAcc = window.localStorage.getItem("cal-accum");
+if (calAcc) {
+  const el = document.getElementById("cal-total");
+  if (el) el.textContent = calAcc;
+}
+const savedLightDate = window.localStorage.getItem("light-date");
+if (savedLightDate) {
+  const el = document.getElementById("light-date");
+  if (el) el.textContent = savedLightDate;
 }

@@ -43,6 +43,10 @@ export class LocalStorageAdapter implements StorageAdapter {
 
   async saveProfile(profile: Profile): Promise<void> {
     await this.setProfile(profile);
+    // Mirror pattern to the dedicated key main reads for timer layout
+    if (profile.pattern) {
+      window.localStorage.setItem("profile-pattern", profile.pattern);
+    }
   }
   async loadProfile(): Promise<Profile | null> {
     return this.getProfile();
