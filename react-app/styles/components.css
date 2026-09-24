@@ -1,0 +1,69 @@
+/* components.css — shared component styles, no inline styles allowed */
+:root {
+  --bg: #fdfcf8;
+  --fg: #222;
+  --accent: #c7bfae;
+  --border: #eae8e0;
+  --card: #fff;
+}
+
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  margin: 1rem 0;
+}
+
+.btn-light-day {
+  background: #fff8f0;
+  border: 1.5px solid var(--accent);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #222;
+  width: 100%;
+  margin-top: 0.8rem;
+  cursor: pointer;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-link {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: #6e6c60;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: #222;
+  border: 1.5px solid var(--accent);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  color: #222;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
