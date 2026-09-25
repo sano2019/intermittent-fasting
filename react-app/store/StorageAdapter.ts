@@ -27,8 +27,10 @@ export class LocalStorageAdapter implements StorageAdapter {
   }
 
   async loadAll(): Promise<FastRecord[]> {
-    const raw = window.localStorage.getItem(this.K);
-    return raw ? JSON.parse(raw) : [];
+    try {
+      const raw = window.localStorage.getItem(this.K);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
   }
 
   async loadRange(s: Date, e: Date): Promise<FastRecord[]> {
@@ -44,10 +46,11 @@ export class LocalStorageAdapter implements StorageAdapter {
   }
 
   async loadProfile(): Promise<any> {
-    const raw =
-      window.localStorage.getItem("Profile:lang") ||
-      window.localStorage.getItem("if_local_profile");
-    return raw ? JSON.parse(raw) : null;
+    const raw = window.localStorage.getItem("if_local_profile");
+    if (!raw) {
+      return { id: "local-user-1", name: "You", pattern: "16:8", startTime: "08:00", endTime: "16:00", lang: "en", createdAt: "2026-09-23T09:41:27.285Z" };
+    }
+    try { return JSON.parse(raw); } catch { return { id: "local-user-1", name: "You", pattern: "16:8", startTime: "08:00", endTime: "16:00", lang: "en", createdAt: "2026-09-23T09:41:27.285Z" }; }
   }
 
   async saveProfile(p: any): Promise<void> {

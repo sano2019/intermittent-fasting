@@ -1,17 +1,38 @@
 /* timer.css — timer ring + control elements */
 .timer-ring-card {
   text-align: center;
+  padding: 24px 20px 20px;
 }
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 48px 20px 96px;
+  line-height: 1.55;
+}
+
+.app > header > p {
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
 .timer-card-title {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-style: italic;
-  font-size: 1.3rem;
-  color: #6e6c60;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-size: 0.85em;
+  margin-bottom: 16px;
 }
 .ring-wrap {
   position: relative;
   display: inline-block;
   margin: 1rem 0;
+}
+.timer-ring {
+  width: 260px;
+  max-width: 78vw;
+  display: block;
+  margin: 0 auto;
 }
 .fast-ring {
   width: 200px;
@@ -26,13 +47,13 @@
   font-size: 2.2rem;
   color: #222;
 }
-.mode-pills {
+.timer-pill-row {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
 }
-.pill {
+.timer-pill {
   border: 1px solid #eae8e0;
   background: #fff;
   padding: 0.35rem 0.9rem;
@@ -42,7 +63,7 @@
   cursor: pointer;
   letter-spacing: 0.01em;
 }
-.pill.active {
+.timer-pill.active {
   background: #c7bfae;
   border-color: #c7bfae;
   color: #222;
@@ -53,8 +74,6 @@
   justify-content: center;
   gap: 0.75rem;
   margin-top: 0.5rem;
-}
-.timer-btn {
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;

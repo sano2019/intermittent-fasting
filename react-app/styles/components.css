@@ -1,38 +1,42 @@
-/* components.css — shared component styles, no inline styles allowed */
+/* components.css — base component rules ONLY (timer ring/pills/eyebrow live in timer.css; no duplicates) */
 :root {
-  --bg: #fdfcf8;
-  --fg: #222;
+  --bg: #f6f4f1;
+  --fg: #2b2b28;
+  --muted: #8a8780;
   --accent: #c7bfae;
+  --card: #faf9f6;
   --border: #eae8e0;
-  --card: #fff;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius: 16px;
 }
 
-.card {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 1.25rem;
-  padding: 1.25rem;
-  margin: 1rem 0;
-}
-
-.btn-light-day {
-  background: #fff8f0;
-  border: 1.5px solid var(--accent);
-  border-radius: 0.75rem;
-  padding: 0.75rem 1rem;
-  font-family: "DM Sans", system-ui, sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  color: #222;
-  width: 100%;
-  margin-top: 0.8rem;
-  cursor: pointer;
-}
-
+/* HEADER STYLING */
 .header-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  gap: 1rem;
+}
+.header-row h1 {
+  grid-column: 2;
+  justify-self: center;
+  text-align: center;
+}
+.header-row .header-link {
+  grid-column: 3;
+  justify-self: end;
+}
+
+header h1 {
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+header p {
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .header-link {
@@ -45,16 +49,53 @@
   border-radius: 1rem;
 }
 
-.primary-btn {
-  background: var(--accent);
-  color: #222;
-  border: 1.5px solid var(--accent);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-  font-family: "DM Sans", system-ui, sans-serif;
+main > header > p {
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  margin: 1rem 0;
+}
+/* .btn-light-day {
+  background: #fff8f0;
+  border: 1.5px solid #ebe8dc;
+  border-radius: 2rem;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  color: #222;
+  width: 100%;
+  margin-top: 0.8rem;
   cursor: pointer;
+} */
+
+.primary-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: var(--muted);
 }
 
 .btn-secondary {
@@ -66,4 +107,28 @@
   font-family: "DM Sans", system-ui, sans-serif;
   font-size: 0.85rem;
   cursor: pointer;
+}
+/* TimerRing-specific non-timer rules (state styling) — ring/pills/card/eyebrow moved to timer.css */
+.timer-start {
+  width: 100%;
+  padding: 14px;
+  border-radius: 24px;
+  font-size: 1em;
+  letter-spacing: 0.02em;
+  background: #c7bfae;
+  color: #222;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+.timer-state-active.stop-mode {
+  background: #eae8e0;
+  color: #6e6c60;
+}
+/* Responsive layout wrapper only (no timer internals — lives in timer.css) */
+@media (max-width: 600px) {
+  .timer-ring-card {
+    padding: 1.25rem 1rem;
+    max-width: 100%;
+    border-radius: 1rem;
+  }
 }
