@@ -66,8 +66,17 @@ body {
   background: var(--card);
   border: 1.5px solid var(--border);
   border-radius: 1.25rem;
-  padding: 1.25rem;
-  margin: 1rem 0;
+  padding: 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.card h2 {
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 14px;
 }
 /* .btn-light-day {
   background: #fff8f0;
