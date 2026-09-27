@@ -185,50 +185,93 @@
 /* Edit sub-form in modal */
 .history-edit-box {
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  padding: 10px 12px;
-  margin-top: 8px;
+  padding: 12px 14px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .history-edit-inputs {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
-.history-edit-inputs input,
-.history-edit-inputs select {
+.history-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+}
+
+.history-edit-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.history-edit-field input,
+.history-edit-field select {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  padding: 4px 8px;
+  font-size: 0.92rem;
+  padding: 8px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
   background: var(--input-bg);
   color: var(--fg);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.history-edit-field input[type="datetime-local"]::-webkit-date-and-time-value {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  min-height: 1.2em;
+  width: 100%;
 }
 
 .history-edit-buttons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: flex-end;
+  margin-top: 4px;
 }
 
 .history-edit-btn {
-  padding: 4px 10px;
-  font-size: 0.8rem;
+  padding: 6px 14px;
+  font-size: 0.85rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
   border: 1px solid var(--border-strong);
-  background: var(--bg);
+  background: var(--card);
   color: var(--fg);
+  transition: all 0.15s ease;
+}
+
+.history-edit-btn:hover {
+  background: var(--border);
 }
 
 .history-edit-btn.save {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-fg);
   border-color: var(--btn-primary-bg);
+}
+
+.history-edit-btn.save:hover {
+  background: var(--btn-primary-hover);
 }

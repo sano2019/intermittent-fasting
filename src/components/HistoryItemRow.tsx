@@ -75,33 +75,44 @@ export function HistoryItemRow({
       {isEditing && (
         <div className="history-edit-box">
           <div className="history-edit-inputs">
-            <input
-              type="time"
-              value={editStart}
-              onChange={(e) => onEditStartChange(e.target.value)}
-              aria-label="Start time"
-            />
-            <span>→</span>
-            <input
-              type="time"
-              value={editEnd}
-              onChange={(e) => onEditEndChange(e.target.value)}
-              aria-label="End time"
-            />
-            <select
-              value={editPattern}
-              onChange={(e) =>
-                onEditPatternChange(e.target.value as FastingPattern)
-              }
-              aria-label="Pattern"
-            >
-              <option value="16:8">16:8</option>
-              <option value="18:6">18:6</option>
-              <option value="20:4">20:4</option>
-              <option value="OMAD">OMAD</option>
-              <option value="5:2">5:2</option>
-              <option value="Custom">Custom</option>
-            </select>
+            <div className="history-edit-field">
+              <label htmlFor={`edit-start-${record.id}`}>{t("confirm.start")}</label>
+              <input
+                id={`edit-start-${record.id}`}
+                type="datetime-local"
+                value={editStart}
+                onChange={(e) => onEditStartChange(e.target.value)}
+                aria-label={t("confirm.start")}
+              />
+            </div>
+            <div className="history-edit-field">
+              <label htmlFor={`edit-end-${record.id}`}>{t("confirm.end")}</label>
+              <input
+                id={`edit-end-${record.id}`}
+                type="datetime-local"
+                value={editEnd}
+                onChange={(e) => onEditEndChange(e.target.value)}
+                aria-label={t("confirm.end")}
+              />
+            </div>
+            <div className="history-edit-field">
+              <label htmlFor={`edit-pattern-${record.id}`}>{t("confirm.pattern")}</label>
+              <select
+                id={`edit-pattern-${record.id}`}
+                value={editPattern}
+                onChange={(e) =>
+                  onEditPatternChange(e.target.value as FastingPattern)
+                }
+                aria-label={t("confirm.pattern")}
+              >
+                <option value="16:8">16:8</option>
+                <option value="18:6">18:6</option>
+                <option value="20:4">20:4</option>
+                <option value="OMAD">OMAD</option>
+                <option value="5:2">5:2</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
           </div>
           <div className="history-edit-buttons">
             <button

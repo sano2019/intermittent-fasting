@@ -13,6 +13,18 @@ interface HistoryModalProps {
   onUpdate: (record: FastRecord) => Promise<void>;
 }
 
+function toLocalDatetimeString(dateOrIso: Date | string | null): string {
+  const d = dateOrIso ? new Date(dateOrIso) : new Date();
+  if (isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const year = d.getFullYear();
+  const month = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  const hours = pad(d.getHours());
+  const minutes = pad(d.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 export function HistoryModal({
   isOpen,
   onClose,
@@ -68,38 +80,31 @@ export function HistoryModal({
 
   const startEdit = (rec: FastRecord) => {
     setEditingId(rec.id);
-    const s = new Date(rec.startTime);
-    const e = new Date(rec.endTime);
-    const pad = (n: number) => String(n).padStart(2, "0");
-    setEditStart(`${pad(s.getHours())}:${pad(s.getMinutes())}`);
-    setEditEnd(`${pad(e.getHours())}:${pad(e.getMinutes())}`);
+    setEditStart(toLocalDatetimeString(rec.startTime));
+    setEditEnd(toLocalDatetimeString(rec.endTime));
     setEditPattern(rec.pattern);
   };
 
   const saveEdit = async (rec: FastRecord) => {
     try {
-      const sDate = new Date(rec.startTime);
-      const eDate = new Date(rec.endTime);
-      const [sh, sm] = editStart.split(":").map(Number);
-      const [eh, em] = editEnd.split(":").map(Number);
+      const sDate = new Date(editStart);
+      const eDate = new Date(editEnd);
 
-      sDate.setHours(sh || 0, sm || 0, 0, 0);
-      eDate.setHours(eh || 0, em || 0, 0, 0);
-
-      let newDur = eDate.getTime() - sDate.getTime();
-      if (newDur < 0) {
-        // Wrapped past midnight
-        newDur += 24 * 3600 * 1000;
-        eDate.setDate(eDate.getDate() + 1);
+      if (isNaN(sDate.getTime()) || isNaN(eDate.getTime())) {
+        return;
       }
 
+      const newDur = Math.max(0, eDate.getTime() - sDate.getTime());
+
       const targetHours =
-        rec.pattern === "OMAD"
+        editPattern === "OMAD"
           ? 24
-          : rec.pattern === "20:4"
+          : editPattern === "20:4"
           ? 20
-          : rec.pattern === "18:6"
+          : editPattern === "18:6"
           ? 18
+          : editPattern === "5:2"
+          ? 24
           : 16;
       const targetMs = targetHours * 3600000;
 

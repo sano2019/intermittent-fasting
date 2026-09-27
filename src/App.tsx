@@ -58,23 +58,6 @@ function AppContent() {
     }
   }, []);
 
-  const handleDismissOnboarding = useCallback((targetPage?: "home" | "profile") => {
-    try {
-      localStorage.setItem("fasting_onboarding_seen_v2", "true");
-    } catch {}
-    setIsOnboardingOpen(false);
-    if (targetPage) {
-      setCurrentPage(targetPage);
-    }
-  }, []);
-
-  const handleManualOpenOnboarding = useCallback(() => {
-    const hasRecords = !!localStorage.getItem("fast-records");
-    const hasProfile = !!localStorage.getItem("user-profile");
-    setIsOnboardingUpgraded(hasRecords || hasProfile);
-    setIsOnboardingOpen(true);
-  }, []);
-
   const refreshRecords = useCallback(async () => {
     const list = await adapter.loadAll();
     setRecords(list);
@@ -94,6 +77,34 @@ function AppContent() {
     if (p?.theme && (p.theme === "dark" || p.theme === "light")) {
       applyTheme(p.theme);
     }
+  }, []);
+
+  const navigateTo = useCallback((target: "home" | "profile") => {
+    const targetHash = target === "profile" ? "#/profile" : "#/";
+    if (window.location.hash !== targetHash) {
+      window.location.hash = target === "profile" ? "/profile" : "/";
+    }
+    setCurrentPage(target);
+    if (target === "home") {
+      refreshProfile();
+    }
+  }, [refreshProfile]);
+
+  const handleDismissOnboarding = useCallback((targetPage?: "home" | "profile") => {
+    try {
+      localStorage.setItem("fasting_onboarding_seen_v2", "true");
+    } catch {}
+    setIsOnboardingOpen(false);
+    if (targetPage) {
+      navigateTo(targetPage);
+    }
+  }, [navigateTo]);
+
+  const handleManualOpenOnboarding = useCallback(() => {
+    const hasRecords = !!localStorage.getItem("fast-records");
+    const hasProfile = !!localStorage.getItem("user-profile");
+    setIsOnboardingUpgraded(hasRecords || hasProfile);
+    setIsOnboardingOpen(true);
   }, []);
 
   const homeSubtitle = useMemo(() => {
@@ -171,6 +182,7 @@ function AppContent() {
               subtitle={homeSubtitle}
               buttonLabel={t("nav.profile")}
               target="profile"
+              onNavigate={navigateTo}
             />
 
             {pattern === "5:2" ? (
@@ -202,6 +214,7 @@ function AppContent() {
               subtitle={t("profile.subtitle")}
               buttonLabel={t("nav.back")}
               target="home"
+              onNavigate={navigateTo}
             />
             <ProfilePage onOpenOnboarding={handleManualOpenOnboarding} />
           </>

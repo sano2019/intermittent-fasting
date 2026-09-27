@@ -7,12 +7,17 @@ interface HeaderProps {
   subtitle: string;
   buttonLabel: string;
   target: AppRoute;
+  onNavigate?: (target: AppRoute) => void;
 }
 
-export function Header({ title, subtitle, buttonLabel, target }: HeaderProps) {
+export function Header({ title, subtitle, buttonLabel, target, onNavigate }: HeaderProps) {
   const handleNavigation = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.location.hash = `/${target}`;
+    if (onNavigate) {
+      onNavigate(target);
+    } else {
+      window.location.hash = `/${target}`;
+    }
   };
 
   return (
@@ -20,7 +25,7 @@ export function Header({ title, subtitle, buttonLabel, target }: HeaderProps) {
       <div className="header-row">
         <h1>{title}</h1>
         <a
-          href={`#${target}`}
+          href={`#/${target}`}
           className="header-link"
           onClick={handleNavigation}
         >
