@@ -3,6 +3,13 @@
   padding: 24px 22px 28px;
   text-align: left;
   margin-top: 1.5rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 20px 16px 24px;
+  }
 }
 
 .profile-card-title {
@@ -19,6 +26,7 @@
   flex-direction: column;
   gap: 8px;
   margin-bottom: 18px;
+  min-width: 0;
 }
 
 .profile-field-group.profile-field-group-spaced {
@@ -34,6 +42,8 @@
 .profile-select,
 .profile-input {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
   padding: 12px 16px;
   font-size: 1rem;
@@ -46,6 +56,27 @@
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Specific styling for time inputs to prevent mobile iOS WebKit intrinsic blowout */
+.profile-input[type="time"] {
+  padding: 12px 10px;
+  text-align: center;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+/* iOS Safari WebKit native time display alignment */
+.profile-input[type="time"]::-webkit-date-and-time-value {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 1.25em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .profile-select:focus,
 .profile-input:focus {
   border-color: var(--fg);
@@ -54,21 +85,21 @@
 /* Fasting Pattern Cards */
 .pattern-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 4px;
 }
 
 .profile-mode-options {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-top: 10px;
 }
 
 @media (max-width: 480px) {
   .pattern-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -123,9 +154,18 @@
 /* Eating times row */
 .profile-times-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
   margin-bottom: 22px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 340px) {
+  .profile-times-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 
 /* Save button & status */
