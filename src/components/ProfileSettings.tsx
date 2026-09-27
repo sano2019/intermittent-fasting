@@ -8,7 +8,11 @@ import { ThemeToggle } from "./ThemeToggle";
 import { ReviewModeSelector } from "./ReviewModeSelector";
 import { NotificationSettings } from "./NotificationSettings";
 
-export function ProfileSettings() {
+interface ProfileSettingsProps {
+  onOpenOnboarding?: () => void;
+}
+
+export function ProfileSettings({ onOpenOnboarding }: ProfileSettingsProps) {
   const { t } = useTranslation();
   const {
     name,
@@ -40,6 +44,16 @@ export function ProfileSettings() {
   return (
     <section className="card profile-card" aria-label="Profile settings">
       <div className="profile-card-title">{t("profile.title")}</div>
+
+      {onOpenOnboarding && (
+        <button
+          type="button"
+          className="btn-open-guide"
+          onClick={onOpenOnboarding}
+        >
+          {t("onboarding.reopen_btn")}
+        </button>
+      )}
 
       <form onSubmit={handleSave}>
         {/* Language Selection */}

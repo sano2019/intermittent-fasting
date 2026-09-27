@@ -1,10 +1,14 @@
 import React from "react";
 import { ProfileSettings } from "./ProfileSettings";
 
-export function ProfilePage() {
+interface ProfilePageProps {
+  onOpenOnboarding?: () => void;
+}
+
+export function ProfilePage({ onOpenOnboarding }: ProfilePageProps) {
   return (
     <>
-      <ProfileSettings />
+      <ProfileSettings onOpenOnboarding={onOpenOnboarding} />
     </>
   );
 }

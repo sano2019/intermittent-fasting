@@ -173,11 +173,7 @@ export function TimerRing({
               +
             </button>
           </div>
-        ) : (
-          <div className="timer-stepper" aria-label="Fast duration">
-            <span className="stepper-label">{targetHours} hr</span>
-          </div>
-        )}
+        ) : null}
 
         <button
           type="button"

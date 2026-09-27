@@ -9,6 +9,7 @@ import "./styles/profile.css";
 import "./styles/calorie-day.css";
 import "./styles/expert-insights.css";
 import "./styles/weight-chart.css";
+import "./styles/onboarding.css";
 import { ProfilePage } from "./components/ProfilePage";
 import { TimerRing } from "./components/TimerRing";
 import { CalorieDayCard } from "./components/CalorieDayCard";
@@ -17,6 +18,7 @@ import { WeeklyReview } from "./components/WeeklyReview";
 import { HistoryModal } from "./components/HistoryModal";
 import { ExpertInsightsCard } from "./components/ExpertInsightsCard";
 import { NotificationToast } from "./components/NotificationToast";
+import { OnboardingModal } from "./components/OnboardingModal";
 import { adapter, FastRecord, UserProfile } from "./store/StorageAdapter";
 import { I18nProvider, useTranslation } from "./i18n/I18nContext";
 import { startReminderScheduler, stopReminderScheduler } from "./services/notificationService";
@@ -30,7 +32,48 @@ function AppContent() {
   const [userName, setUserName] = useState<string>("");
   const [records, setRecords] = useState<FastRecord[]>([]);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isOnboardingUpgraded, setIsOnboardingUpgraded] = useState(false);
   const activeProfileRef = useRef<UserProfile | null>(null);
+
+  // Check for first-time or upgraded experience
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem("fasting_onboarding_seen_v2");
+      const hasRecords = !!localStorage.getItem("fast-records");
+      const hasProfile = !!localStorage.getItem("user-profile");
+      const hasWeights = !!localStorage.getItem("fast-weights");
+      const isUpgraded = hasRecords || hasProfile || hasWeights;
+
+      if (!seen) {
+        setIsOnboardingUpgraded(isUpgraded);
+        setIsOnboardingOpen(true);
+        // Direct brand new users to the profile page so settings are immediately accessible
+        if (!isUpgraded) {
+          setCurrentPage("profile");
+        }
+      }
+    } catch (e) {
+      console.warn("Could not check onboarding status", e);
+    }
+  }, []);
+
+  const handleDismissOnboarding = useCallback((targetPage?: "home" | "profile") => {
+    try {
+      localStorage.setItem("fasting_onboarding_seen_v2", "true");
+    } catch {}
+    setIsOnboardingOpen(false);
+    if (targetPage) {
+      setCurrentPage(targetPage);
+    }
+  }, []);
+
+  const handleManualOpenOnboarding = useCallback(() => {
+    const hasRecords = !!localStorage.getItem("fast-records");
+    const hasProfile = !!localStorage.getItem("user-profile");
+    setIsOnboardingUpgraded(hasRecords || hasProfile);
+    setIsOnboardingOpen(true);
+  }, []);
 
   const refreshRecords = useCallback(async () => {
     const list = await adapter.loadAll();
@@ -160,10 +203,16 @@ function AppContent() {
               buttonLabel={t("nav.back")}
               target="home"
             />
-            <ProfilePage />
+            <ProfilePage onOpenOnboarding={handleManualOpenOnboarding} />
           </>
         )}
       </main>
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        isUpgraded={isOnboardingUpgraded}
+        onClose={handleDismissOnboarding}
+      />
     </>
   );
 }

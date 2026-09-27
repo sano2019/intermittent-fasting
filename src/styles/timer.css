@@ -160,6 +160,10 @@
 }
 
 /* Timer primary action button matching Screenshot */
+.ring-wrap + .timer-start {
+  margin-top: 1.5rem;
+}
+
 .timer-start {
   width: 100%;
   padding: 14px 20px;
