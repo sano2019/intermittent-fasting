@@ -34,7 +34,7 @@ jobs:
       - name: Install Project Dependencies
         run: npm ci
       - name: Compile and Bundle Site Build
-        run: node ./node_modules/vite/bin/vite.js build
+        run: npm run build
       - name: Upload Static Build Artifacts
         uses: actions/upload-pages-artifact@v4
         with:
