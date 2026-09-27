@@ -32,7 +32,7 @@ jobs:
           node-version: 24
           cache: "npm"
       - name: Install Project Dependencies
-        run: npm ci
+        run: npm ci || npm install
       - name: Compile and Bundle Site Build
         run: npm run build
       - name: Upload Static Build Artifacts
