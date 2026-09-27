@@ -89,10 +89,6 @@ export function ConfirmFastModal({
     const targetHours =
       pattern === "OMAD"
         ? 24
-        : pattern === "20:4"
-        ? 20
-        : pattern === "18:6"
-        ? 18
         : pattern === "5:2"
         ? 24
         : 16;
@@ -135,10 +131,8 @@ export function ConfirmFastModal({
           onChange={(e) => setPattern(e.target.value as FastingPattern)}
         >
           <option value="16:8">16:8</option>
-          <option value="18:6">18:6</option>
-          <option value="20:4">20:4</option>
-          <option value="OMAD">OMAD</option>
           <option value="5:2">5:2</option>
+          <option value="OMAD">OMAD</option>
           <option value="Custom">Custom</option>
         </select>
       </div>

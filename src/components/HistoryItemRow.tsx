@@ -106,10 +106,8 @@ export function HistoryItemRow({
                 aria-label={t("confirm.pattern")}
               >
                 <option value="16:8">16:8</option>
-                <option value="18:6">18:6</option>
-                <option value="20:4">20:4</option>
-                <option value="OMAD">OMAD</option>
                 <option value="5:2">5:2</option>
+                <option value="OMAD">OMAD</option>
                 <option value="Custom">Custom</option>
               </select>
             </div>

@@ -99,10 +99,6 @@ export function HistoryModal({
       const targetHours =
         editPattern === "OMAD"
           ? 24
-          : editPattern === "20:4"
-          ? 20
-          : editPattern === "18:6"
-          ? 18
           : editPattern === "5:2"
           ? 24
           : 16;

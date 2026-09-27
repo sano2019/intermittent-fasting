@@ -1,4 +1,4 @@
-export type FastingPattern = "16:8" | "18:6" | "20:4" | "OMAD" | "5:2" | "Custom";
+export type FastingPattern = "16:8" | "5:2" | "OMAD" | "Custom";
 
 export type FastingTheme = "light" | "dark";
 
