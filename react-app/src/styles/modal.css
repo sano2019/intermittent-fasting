@@ -1,0 +1,352 @@
+/* modal.css — reusable modal primitives, confirm fast dialog, and delete dialog */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.modal-overlay.modal-elevated {
+  z-index: 1100;
+}
+
+.modal-dialog {
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  animation: modalFadeIn 0.18s ease-out;
+  box-sizing: border-box;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   Confirm Fast Modal (Screenshot 1)
+   ========================================= */
+.confirm-fast-dialog {
+  max-width: 350px;
+  border-radius: 28px;
+  padding: 26px 22px 22px;
+}
+
+.confirm-fast-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 6px 0;
+  text-align: left;
+}
+
+.confirm-fast-duration {
+  font-size: 1.05rem;
+  color: var(--fg);
+  margin: 0 0 18px 0;
+  text-align: left;
+}
+
+.confirm-fast-pattern-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.confirm-fast-pattern-label {
+  font-size: 1.05rem;
+  color: var(--fg);
+  font-weight: 400;
+}
+
+.confirm-fast-select {
+  border: 1.5px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  outline: none;
+}
+
+.confirm-fast-select:focus {
+  border-color: var(--fg);
+}
+
+.confirm-fast-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.confirm-fast-field-label {
+  font-size: 1.05rem;
+  color: var(--fg);
+  font-weight: 400;
+}
+
+.confirm-fast-input {
+  border: 1.5px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  font-family: var(--font-sans);
+  color: var(--fg);
+  background-color: var(--input-bg);
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.confirm-fast-input:focus {
+  border-color: var(--fg);
+}
+
+.confirm-fast-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.btn-confirm-cancel {
+  width: 100%;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 14px;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 12px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background-color 0.15s ease;
+}
+
+.btn-confirm-cancel:hover {
+  background-color: var(--border);
+}
+
+.btn-confirm-save {
+  width: 100%;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 14px;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 12px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background-color 0.15s ease;
+}
+
+.btn-confirm-save:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+/* =========================================
+   Delete Confirmation Modal (Screenshot 2)
+   ========================================= */
+.delete-confirm-dialog {
+  max-width: 320px;
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  text-align: center;
+}
+
+.delete-confirm-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 8px 0;
+}
+
+.delete-confirm-desc {
+  font-size: 0.95rem;
+  color: var(--muted-foreground);
+  margin: 0 0 20px 0;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-delete-cancel {
+  background-color: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-delete-cancel:hover {
+  background-color: var(--border);
+}
+
+.btn-delete-confirm {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-delete-confirm:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+/* =========================================
+   Adjust Start Time Modal (Screenshot 2)
+   ========================================= */
+.adjust-time-dialog {
+  max-width: 340px;
+  width: 90%;
+  border-radius: 24px;
+  padding: 26px 22px 22px;
+  background: var(--card);
+}
+
+.adjust-time-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 16px 0;
+  text-align: left;
+}
+
+.adjust-time-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.adjust-time-label {
+  font-size: 1rem;
+  color: var(--fg);
+  font-weight: 400;
+}
+
+.adjust-time-input {
+  border: 1.5px solid #6b6875;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 1.05rem;
+  font-family: var(--font-sans);
+  color: var(--fg);
+  background-color: var(--input-bg);
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  min-height: 46px;
+}
+
+.adjust-time-input:focus {
+  border-color: var(--fg);
+}
+
+.adjust-time-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.btn-adjust-cancel {
+  width: 100%;
+  min-height: 48px;
+  border: 1.5px solid #6b6875;
+  border-radius: 6px;
+  background-color: #eaedf1;
+  color: #1c1b18;
+  font-size: 1.05rem;
+  font-weight: 400;
+  padding: 11px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-adjust-cancel:hover {
+  background-color: #e0e4e9;
+}
+
+.btn-adjust-save {
+  width: 100%;
+  min-height: 48px;
+  border: 1.5px solid #6b6875;
+  border-radius: 6px;
+  background-color: #c4baa7;
+  color: #1c1b18;
+  font-size: 1.05rem;
+  font-weight: 400;
+  padding: 11px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-adjust-save:hover {
+  background-color: #b8ad99;
+}
+
+:root[data-theme="dark"] .adjust-time-dialog {
+  background-color: #201e1a;
+  border: 1.5px solid var(--border);
+}
+
+:root[data-theme="dark"] .btn-adjust-cancel {
+  background-color: #2b2823;
+  border-color: #625c50;
+  color: #ebe7df;
+}
+
+:root[data-theme="dark"] .btn-adjust-cancel:hover {
+  background-color: #38342e;
+}
+
+:root[data-theme="dark"] .btn-adjust-save {
+  background-color: #c4baa7;
+  border-color: #6b6875;
+  color: #1c1b18;
+}
+
+:root[data-theme="dark"] .btn-adjust-save:hover {
+  background-color: #b8ad99;
+}

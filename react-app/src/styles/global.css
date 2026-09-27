@@ -1,0 +1,147 @@
+/* global.css — base layout and shared UI elements */
+@import "./variables.css";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-base);
+  background-color: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 48px 20px 96px;
+  line-height: 1.55;
+}
+
+main {
+  display: block;
+}
+
+/* Base Card */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-top: 1.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.card h2 {
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 14px 0;
+}
+
+/* Shared Buttons */
+.primary-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-base);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.primary-btn:hover {
+  background: var(--muted);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  color: var(--fg);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--accent);
+  color: var(--fg);
+}
+
+/* In-App Toast Notification Banner */
+.in-app-toast {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #24221f;
+  color: #f7f5ef;
+  border-radius: 16px;
+  padding: 12px 18px;
+  max-width: 90vw;
+  width: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  animation: slideDownToast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+@keyframes slideDownToast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -15px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.in-app-toast-inner {
+  flex: 1;
+  text-align: left;
+}
+
+.in-app-toast-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: #fff;
+}
+
+.in-app-toast-body {
+  font-size: 0.78rem;
+  color: #d1ccbf;
+  line-height: 1.35;
+}
+
+.in-app-toast-close {
+  background: none;
+  border: none;
+  color: #a8a396;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.in-app-toast-close:hover {
+  color: #ffffff;
+}
+

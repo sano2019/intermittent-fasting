@@ -1,0 +1,198 @@
+/* timer.css — timer ring, pills, stepper and action button matching screenshot */
+.timer-ring-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 24px 26px;
+}
+
+.timer-card-title {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.ring-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 1.25rem auto 0.5rem;
+}
+
+.timer-ring {
+  width: 260px;
+  max-width: 76vw;
+  display: block;
+  margin: 0 auto;
+}
+
+.ring-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono, monospace);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.timer-pill-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.timer-pill {
+  border: 1.5px solid var(--border-strong);
+  background: var(--pill-bg);
+  color: var(--fg);
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: all 0.15s ease;
+}
+
+.timer-pill:hover:not(.active) {
+  border-color: var(--muted);
+}
+
+.timer-pill.active {
+  background: var(--pill-active-bg);
+  border-color: var(--pill-active-bg);
+  color: var(--pill-active-fg);
+  font-weight: 500;
+}
+
+/* Stepper row (- 16 hr +) matching Screenshot */
+.timer-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.stepper-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--pill-bg);
+  border: 1.5px solid var(--border-strong);
+  color: var(--fg);
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.stepper-btn:hover:not(:disabled) {
+  background: var(--bg);
+  border-color: var(--muted);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.stepper-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stepper-label {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--fg);
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Adjust start time container & pill button (shown only when timer is running, centered below ring) */
+.adjust-start-time-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 1.15rem auto 1.35rem;
+}
+
+.btn-adjust-start-time {
+  padding: 8px 22px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border-strong);
+  background: var(--pill-bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-adjust-start-time:hover {
+  border-color: var(--muted);
+  transform: translateY(-1px);
+}
+
+/* Timer primary action button matching Screenshot */
+.timer-start {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.timer-start:hover {
+  background: var(--btn-primary-hover);
+}
+
+.timer-start.stop-mode {
+  background: var(--btn-stop-bg);
+  color: var(--btn-stop-fg);
+}
+
+.timer-start.stop-mode:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .timer-ring-card {
+    padding: 1.25rem 1rem;
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+  }
+}

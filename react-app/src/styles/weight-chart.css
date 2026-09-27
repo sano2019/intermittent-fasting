@@ -1,0 +1,225 @@
+/* weight-chart.css — Calm modular 30-day weight trend chart */
+
+.weight-trend-container {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.weight-trend-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.weight-trend-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weight-trend-title {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin: 0;
+}
+
+.weight-trend-subtitle {
+  font-size: 0.78rem;
+  color: var(--muted-foreground, var(--muted));
+}
+
+.weight-log-btn {
+  background: var(--pill-bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-family: var(--font-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.weight-log-btn:hover {
+  background: var(--pill-active-bg, var(--fg));
+  color: var(--pill-active-fg, var(--bg));
+}
+
+.weight-metrics-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.weight-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weight-metric-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.weight-metric-value {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.weight-chart-wrapper {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 8px;
+}
+
+.weight-empty-box {
+  padding: 24px 16px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  background: var(--pill-bg);
+  border: 1px dashed var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.weight-custom-tooltip {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--fg);
+}
+
+/* Weight Modal styling */
+.weight-modal-dialog {
+  max-width: 400px;
+  padding: 22px;
+}
+
+.weight-modal-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  color: var(--fg);
+}
+
+.weight-form-group {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.weight-form-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.weight-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.weight-input {
+  flex: 1;
+  background: var(--input-bg, var(--bg));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  color: var(--fg);
+  outline: none;
+}
+
+.weight-input:focus {
+  border-color: var(--fg);
+}
+
+.weight-unit-toggle {
+  display: flex;
+  background: var(--pill-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 2px;
+}
+
+.weight-unit-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.weight-unit-btn.active {
+  background: var(--pill-active-bg, var(--fg));
+  color: var(--pill-active-fg, var(--bg));
+}
+
+.weight-recent-list {
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.weight-recent-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.weight-recent-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.84rem;
+  color: var(--fg);
+}
+
+.weight-delete-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 2px 6px;
+  transition: color 0.15s ease;
+}
+
+.weight-delete-btn:hover {
+  color: #c0392b;
+}
+
+.weight-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.weight-modal-actions .weight-save-btn {
+  margin: 0;
+}

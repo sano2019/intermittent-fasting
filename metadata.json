@@ -1,0 +1,6 @@
+{
+  "name": "Fasting — Calm Tracker",
+  "description": "A calm intermittent fasting tracker for your daily rhythm with customizable fasting patterns and timer.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

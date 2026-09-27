@@ -1,0 +1,168 @@
+/* weekly-review.css — weekly review card under timer with Calm and Data views */
+.weekly-review-card {
+  text-align: center;
+  padding: 24px 20px 24px;
+  margin-top: 1.5rem;
+}
+
+.weekly-review-title {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.weekly-dots-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.weekly-day-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.day-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background-color: var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.day-dot.completed {
+  background-color: var(--progress-green);
+}
+
+.day-dot.partial {
+  background-color: var(--accent);
+}
+
+.day-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: var(--font-sans);
+}
+
+/* Calm View Content */
+.weekly-calm-content {
+  margin-bottom: 4px;
+}
+
+.weekly-stat-completed {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+
+.weekly-stat-note {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  margin-bottom: 18px;
+}
+
+/* Data View Content */
+.weekly-data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 18px 0 20px;
+  text-align: left;
+}
+
+.weekly-data-card {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s ease;
+}
+
+.weekly-data-card:hover {
+  border-color: var(--border-strong);
+}
+
+.data-card-label {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.data-card-value {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  line-height: 1.25;
+}
+
+.data-card-unit {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted-foreground);
+  margin-left: 2px;
+}
+
+.data-card-sub {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+/* History Button */
+.weekly-history-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn-previous-fasts,
+.history-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1.5px solid var(--border-strong, #d8d4c9);
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.btn-previous-fasts:hover,
+.history-pill-btn:hover {
+  background: var(--bg);
+  border-color: var(--muted);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.btn-previous-fasts:active,
+.history-pill-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 360px) {
+  .weekly-data-grid {
+    grid-template-columns: 1fr;
+  }
+}

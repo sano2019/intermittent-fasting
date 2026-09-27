@@ -1,14 +1,18 @@
 import { defineConfig } from "vite";
-import basicSsl from "@vitejs/plugin-basic-ssl";
+import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
+  root: "react-app",
   base: "./",
-  plugins: [
-    basicSsl(), // Automatically creates and caches local self-signed certificates
-  ],
+  plugins: [react()],
   server: {
-    https: true, // Forces the local dev server to listen on https://
-    port: 5173, // Keeps your standard port
+    host: "0.0.0.0",
+    port: 3000,
+  },
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true,
   },
 });
+

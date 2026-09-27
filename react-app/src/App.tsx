@@ -1,0 +1,177 @@
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import "./styles/global.css";
+import "./styles/header.css";
+import "./styles/timer.css";
+import "./styles/weekly-review.css";
+import "./styles/history-modal.css";
+import "./styles/modal.css";
+import "./styles/profile.css";
+import "./styles/calorie-day.css";
+import "./styles/expert-insights.css";
+import "./styles/weight-chart.css";
+import { ProfilePage } from "./components/ProfilePage";
+import { TimerRing } from "./components/TimerRing";
+import { CalorieDayCard } from "./components/CalorieDayCard";
+import { Header } from "./components/Header";
+import { WeeklyReview } from "./components/WeeklyReview";
+import { HistoryModal } from "./components/HistoryModal";
+import { ExpertInsightsCard } from "./components/ExpertInsightsCard";
+import { NotificationToast } from "./components/NotificationToast";
+import { adapter, FastRecord, UserProfile } from "./store/StorageAdapter";
+import { I18nProvider, useTranslation } from "./i18n/I18nContext";
+import { startReminderScheduler, stopReminderScheduler } from "./services/notificationService";
+import { applyTheme } from "./services/themeService";
+import type { FastingPattern } from "./types/fasting";
+
+function AppContent() {
+  const { t } = useTranslation();
+  const [currentPage, setCurrentPage] = useState<"home" | "profile">("home");
+  const [pattern, setPattern] = useState<FastingPattern>("Custom");
+  const [userName, setUserName] = useState<string>("");
+  const [records, setRecords] = useState<FastRecord[]>([]);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const activeProfileRef = useRef<UserProfile | null>(null);
+
+  const refreshRecords = useCallback(async () => {
+    const list = await adapter.loadAll();
+    setRecords(list);
+  }, []);
+
+  const refreshProfile = useCallback(async () => {
+    const p = await adapter.loadProfile();
+    activeProfileRef.current = p;
+    if (p?.pattern) {
+      setPattern(p.pattern);
+    }
+    if (p?.name) {
+      setUserName(p.name.trim());
+    } else {
+      setUserName("");
+    }
+    if (p?.theme && (p.theme === "dark" || p.theme === "light")) {
+      applyTheme(p.theme);
+    }
+  }, []);
+
+  const homeSubtitle = useMemo(() => {
+    if (!userName) {
+      return t("app.subtitle");
+    }
+
+    const hour = new Date().getHours();
+    let greeting = "";
+    if (hour >= 5 && hour < 12) {
+      greeting = t("greeting.morning", { name: userName });
+    } else if (hour >= 12 && hour < 18) {
+      greeting = t("greeting.afternoon", { name: userName });
+    } else {
+      greeting = t("greeting.evening", { name: userName });
+    }
+
+    return `${greeting} · ${t("app.subtitle_short")}`;
+  }, [userName, t]);
+
+  useEffect(() => {
+    refreshRecords();
+    refreshProfile().then(() => {
+      startReminderScheduler(() => activeProfileRef.current);
+    });
+
+    return () => {
+      stopReminderScheduler();
+    };
+  }, [refreshRecords, refreshProfile]);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const h = window.location.hash;
+      if (h === "#/profile") {
+        setCurrentPage("profile");
+      } else {
+        setCurrentPage("home");
+        refreshProfile();
+      }
+    };
+
+    const onProfileUpdated = () => {
+      refreshProfile();
+    };
+
+    window.addEventListener("hashchange", onHashChange);
+    window.addEventListener("profile-updated", onProfileUpdated);
+    onHashChange();
+
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      window.removeEventListener("profile-updated", onProfileUpdated);
+    };
+  }, [refreshProfile]);
+
+  const handleDeleteRecord = async (id: string) => {
+    await adapter.delete(id);
+    await refreshRecords();
+  };
+
+  const handleUpdateRecord = async (record: FastRecord) => {
+    await adapter.update(record);
+    await refreshRecords();
+  };
+
+  return (
+    <>
+      <NotificationToast />
+      <main>
+        {currentPage === "home" ? (
+          <>
+            <Header
+              title={t("app.title")}
+              subtitle={homeSubtitle}
+              buttonLabel={t("nav.profile")}
+              target="profile"
+            />
+
+            {pattern === "5:2" ? (
+              <CalorieDayCard onRecordSaved={refreshRecords} />
+            ) : (
+              <TimerRing pattern={pattern} onFastCompleted={refreshRecords} />
+            )}
+
+            <WeeklyReview
+              records={records}
+              pattern={pattern}
+              onOpenHistory={() => setIsHistoryModalOpen(true)}
+            />
+
+            <ExpertInsightsCard />
+
+            <HistoryModal
+              isOpen={isHistoryModalOpen}
+              onClose={() => setIsHistoryModalOpen(false)}
+              records={records}
+              onDelete={handleDeleteRecord}
+              onUpdate={handleUpdateRecord}
+            />
+          </>
+        ) : (
+          <>
+            <Header
+              title={t("profile.title")}
+              subtitle={t("profile.subtitle")}
+              buttonLabel={t("nav.back")}
+              target="home"
+            />
+            <ProfilePage />
+          </>
+        )}
+      </main>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <I18nProvider>
+      <AppContent />
+    </I18nProvider>
+  );
+}
