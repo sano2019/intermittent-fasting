@@ -1,5 +1,5 @@
 // Service worker for Fasting Calm Tracker
-const CACHE_NAME = "fast-v2";
+const CACHE_NAME = "fast-v3";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
