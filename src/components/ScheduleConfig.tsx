@@ -79,6 +79,8 @@ export function ScheduleConfig({
           </div>
         )}
 
+        {/* Reminder time input temporarily commented out until native / Web Push backend is ready */}
+        {/*
         <div className="profile-field-group profile-field-group-spaced">
           <label htmlFor="profile-light-time" className="profile-label">
             {t("profile.light_reminder_time")}
@@ -91,10 +93,14 @@ export function ScheduleConfig({
             onChange={(e) => onLightDayReminderTimeChange(e.target.value)}
           />
         </div>
+        */}
       </div>
     );
   }
 
+  // Eating start & end time boxes are commented out until integrated directly into the notification settings
+  return null;
+  /*
   return (
     <div className="profile-times-row">
       <div className="profile-field-group">
@@ -124,4 +130,5 @@ export function ScheduleConfig({
       </div>
     </div>
   );
+  */
 }

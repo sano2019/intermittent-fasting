@@ -98,13 +98,15 @@ export function ProfileSettings({ onOpenOnboarding }: ProfileSettingsProps) {
           onReviewModeChange={handleReviewModeChange}
         />
 
-        {/* Gentle Reminders / Notification Settings */}
+        {/* Gentle Reminders / Notification Settings (Disabled until native / Web Push backend is connected) */}
+        {/*
         <NotificationSettings
           notificationsEnabled={notificationsEnabled}
           permissionState={permissionState}
           onToggleNotifications={handleToggleNotifications}
           onTestNotification={handleTestNotification}
         />
+        */}
 
         {/* Save Action */}
         <div className="profile-actions-row">

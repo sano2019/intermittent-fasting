@@ -128,7 +128,8 @@ function AppContent() {
   useEffect(() => {
     refreshRecords();
     refreshProfile().then(() => {
-      startReminderScheduler(() => activeProfileRef.current);
+      // Background reminder loop commented out until native/Web Push backend is active
+      // startReminderScheduler(() => activeProfileRef.current);
     });
 
     return () => {
